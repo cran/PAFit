@@ -1,0 +1,9 @@
+useDynLib(PAFit)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
+S3method(print, PAFit)
+S3method(print, PAFitData)
+S3method(plot, PAFit)
+S3method(summary, PAFit)
+S3method(summary, PAFitData)
+
