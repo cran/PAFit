@@ -13,7 +13,7 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
         deg           <- table(in_node)
     } else
     if (net_type[1] == "undirected")
-        deg           <- table(data[,1:2])        
+        deg           <- table(as.vector(as.matrix(data[,1:2])))        
     
     deg_new           <- rep(0,length(node_id))
     names(deg_new)    <- node_id
@@ -141,13 +141,15 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
     names(node_id)    <- node_id
     #now perform the final selection
     true                           <- which(z_j >= deg_threshold)
-   
-    if (length(true) == 0)
-        stop("Degree threshold is too high. Please decrease degree threshold.")  
-    increase[inc >= deg_threshold] <- z_j
-    z_j                            <- z_j[true]
+    if (FALSE == only_PA) {
+        if (length(true) == 0)
+            stop("Degree threshold is too high. Please decrease degree threshold.")  
+        increase[inc >= deg_threshold] <- z_j
+        z_j                            <- z_j[true]
+        f_position                     <- f_position[true]
+    }
     node_degree                    <- node_degree[,true,drop=FALSE]
-    f_position                     <- f_position[true]
+    
 
     result  <- list(offset_tk = offset_tk,net_type = net_type[1], n_tk = n_tk,m_tk = m_tk, bin_vector = bin_vector, Sum_m_k = Sum_m_k,
                     node_degree = node_degree,m_t = m_t,z_j = z_j, initial_nodes = initial_nodes,

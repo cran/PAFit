@@ -20,7 +20,7 @@ Integer. Total number of nodes in the network (including the nodes in the seed g
 Integer. The number of edges of the new node. Default value is \eqn{1}.
 }
 \item{mode}{
-Integer. Indicates the attachment function to be used in generating the network. If mode == 1, the attachment function is \eqn{A_k = k^\alpha}. If mode == 2, the attachment exponenet is \eqn{A_k = min(k,sat_at)^\alpha}. If mode == 3, the attachment function is \eqn{A_k = \alpha log (k)^\beta}. Default value is \eqn{1}.
+Integer. Indicates the attachment function to be used in generating the network. If mode == 1, the attachment function is \eqn{A_k = k^\alpha}. If mode == 2, the attachment function is \eqn{A_k = min(k,sat_at)^\alpha}. If mode == 3, the attachment function is \eqn{A_k = \alpha log (k)^\beta}. Default value is \eqn{1}.
 } 
   \item{alpha}{
 Numeric. If mode == 1, this is the attachment exponent in the attachment function \eqn{A_k = k^\alpha}. If mode == 2, this is the attachment exponenet in the attachment function \eqn{A_k = min(k,sat_at)^\alpha}. If mode == 3, this is the alpha in the attachment function \eqn{A_k = \alpha log (k)^\beta} + 1.
@@ -65,7 +65,9 @@ The output is a List contains the following two fields:
 Thong Pham \email{thongpham@thongpham.net}
 }
 \references{
-Pham, T. and Sheridan, P. and Shimodaira, H. (2015) Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity (submitted).
+1. Pham, T. and Sheridan, P. and Shimodaira, H. (2015). Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity, in press. Proceedings of ECCS 2014: European Conference on Complex Systems.
+
+2. Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796})
 }
 
 \examples{

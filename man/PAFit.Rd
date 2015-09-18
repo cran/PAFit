@@ -8,9 +8,9 @@ A function to estimate the attachment function and node fitness in temporal comp
 From a PAFitData object, which contains summary statistics summerized from the dataset, PAFit estimates the attachment function \eqn{A_k} and node fitness \eqn{f_i} by penalized log-likelihood maximization.  It also calculates confidence intervals for \eqn{A_k} and \eqn{f_i}.  Estimation of the attachment function in isolation (while fixing \eqn{f_i = 1}) can be specified by setting only_PA = TRUE.  Estimation of node fitness in isolation (fixing either \eqn{A_k = k} or \eqn{A_k = 1}) can be specified by setting only_f = TRUE.
 }
 \usage{
-PAFit(data, only_PA , only_f, mode_f,
+PAFit(data, only_PA , only_f, mode_f, true_A, true_f,
 shape, rate, auto_lambda, ratio, lambda, weight_PA_mode, auto_stop, stop_cond,
-iteration , debug , step_size, q , normalized_f, interpolate,...)
+iteration , max_iter, debug , step_size, q , normalized_f, interpolate,...)
 }
 \arguments{
   \item{data}{
@@ -25,7 +25,13 @@ Logical. TRUE means that the fitness function is estimated in isolation. Default
 \item{mode_f}{
 String. Only effective when only_f == TRUE. If mode_f == "Linear_PA" then \eqn{A_k = k}. If mode_f == "Constant_PA" then \eqn{A_k = 1}. Default values is "Linear_PA".
 }
-  \item{shape}{
+\item{true_A}{
+
+}
+\item{true_f}{
+
+}
+\item{shape}{
 Numeric. The shape parameter in the Gamma prior for \eqn{f_i}. Default value is \eqn{0.1}.
 }
   \item{rate}{
@@ -47,7 +53,10 @@ Integer. Indicates how the regularization terms for \eqn{A_k} are weighted. If w
 \item{auto_stop}{Logical. Indicates whether the algorithm stop automatically or not. Default is TRUE}
 \item{stop_cond}{Numeric. If \eqn{auto_stop = TRUE}, the iterative algorithm stops when \eqn{abs(l(i) - l(i+1)/l(i)) < stop_cond}. Default is \eqn{10^-4}.}
 \item{iteration}{
-Numeric. The number of iteration. Ignored if auto_stop == TRUE. Default value is \eqn{20}. 
+Numeric. The number of iterations. Ignored if auto_stop == TRUE. Default value is \eqn{20}. 
+}
+\item{max_iter}{
+Numeric. The maximum number of iterations. Regardless of other settings, the algorithm will stop once the number of  iterations reaches this threshold. Default value is \eqn{1000}.
 }
 \item{debug}{Logical. if debug == TRUE, the value of the log likelihood function is printed out at each step. Defaule is FALSE.}
 \item{step_size}{Numeric. A numeric value between \eqn{0} and \eqn{1}. Determines the convex combination of the default direction given by the MM update and the quasi-Newton direction. Only effective if \eqn{q \ge 2}. \eqn{step_size = 1} means we ignore the default MM direction. Default value is \eqn{1}.}
@@ -86,7 +95,9 @@ Thong Pham
 }
 
 \references{
-Pham, T. and Sheridan, P. and Shimodaira, H. (2015) Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity (submitted).
+1. Pham, T. and Sheridan, P. and Shimodaira, H. (2015). Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity, in press. Proceedings of ECCS 2014: European Conference on Complex Systems.
+
+2. Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796})
 }
 
 

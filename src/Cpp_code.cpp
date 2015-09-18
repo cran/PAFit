@@ -319,7 +319,7 @@ int cal_var_f(      NumericVector& cov_f,
             if ((degree(i,non_zero_f(j) - 1) >= 0) && (normalized_const(i) != 0)) {
                 total += m_t(i) / pow(normalized_const(i),2) * pow(theta(degree(i,non_zero_f(j) - 1)),2);
             }
-          cov_f(j) = 1/(z_j(non_zero_f(j) - 1)/pow(f(non_zero_f(j) - 1),2) + //- total +
+          cov_f(j) = 1/(z_j(non_zero_f(j) - 1)/pow(f(non_zero_f(j) - 1),2) + - total +
                      (shape - 1)*pow(f(non_zero_f(j) - 1),2));
     }
     return 0;

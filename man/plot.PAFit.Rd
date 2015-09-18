@@ -9,7 +9,7 @@ This function plots the estimated attachment function \eqn{A_k} and node fitness
 }
 \usage{
 \method{plot}{PAFit}(x, data, true_f = NULL, plot = c("A","f","true_f"),
-plot_bin = TRUE, line = TRUE, confidence = TRUE, high_deg = NULL, ...)
+plot_bin = TRUE, line = TRUE, confidence = TRUE, high_deg = NULL, shade = 0.5, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,7 +33,9 @@ Logical. Indicates whether to plot the line fitted from the log-linear model or 
 Logical. Indicates whether to plot the confidence intervals of \eqn{A_k} and \eqn{f_i} or not. If confidence == TRUE, a 2-sigma confidence interval will be plotted at each \eqn{A_k} and \eqn{f_i}.
 }
 \item{high_deg}{Integer. If this parameter is specified, only nodes whose number of edges acquired is not less than \eqn{high_deg} is plotted.}
-
+\item{shade}{
+Numeric. Value between 0 and 1. This is the transparency level of the confidence intervals. Default value is 0.5.
+}
   \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
 }
@@ -45,7 +47,9 @@ Outputs the desired plot.
 Thong Pham \email{thongpham@thongpham.net}
 }
 \references{
-Pham, T. and Sheridan, P. and Shimodaira, H. (2015) Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity (submitted).
+1. Pham, T. and Sheridan, P. and Shimodaira, H. (2015). Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity, in press. Proceedings of ECCS 2014: European Conference on Complex Systems.
+
+2. Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796})
 }
 
 \examples{

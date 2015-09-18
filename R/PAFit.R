@@ -1,8 +1,10 @@
 # function to estimate jointly the attachment function and node fitness  2015-3-11 Thong Pham
 PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA", "Constant_PA"),
+                  true_A = NULL, true_f = NULL,
                   shape = 0.1 , rate = 0.1, 
                   auto_lambda = TRUE, ratio = 0, 
-                  lambda = 1, weight_PA_mode = c(0,1), auto_stop = TRUE,stop_cond = 10^-4, iteration = 20,
+                  lambda = 1, weight_PA_mode = c(0,1), auto_stop = TRUE,stop_cond = 10^-4, iteration = 20, 
+                  max_iter = 1000,
                   debug = FALSE,
                   step_size = 1, q = 1, 
                   normalized_f = FALSE, interpolate = FALSE,...) {
@@ -17,10 +19,14 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
     num_nonzero        <- length(non_zero_theta)
     theta              <- rep(1,length(data$Sum_m_k))
     
+    
+    
      for (ii in 1:length(theta))
         if ((mode_f[1] == "Constant_PA") & (only_f == TRUE)) 
         {
-          theta[ii] <- 1;  
+            theta[ii] <- 1;  
+        } else if ((only_f == TRUE) & (!is.null(true_A))) {
+            theta[ii] <- true_A[ii];    
         }
         else {    
             if (ii <= data$start_deg & ii %in% non_zero_theta)
@@ -37,8 +43,12 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
     f             <- rep(2,length(data$f_position))
     f             <- length(f) * f/sum(f)
     
-    if (TRUE == only_PA) f[] <- 1
-    
+    if (TRUE == only_PA) {
+        if (is.null(true_f))
+            f[] <- 1
+        else
+            f[] <- true_f  
+    }
     log_likelihood   <- vector()
     
     update_theta   <- non_zero_theta[-c(1,2,num_nonzero,num_nonzero - 1)]
@@ -59,7 +69,7 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
       lambda <- ratio * sum(data$Sum_m_k)
     }
     if (TRUE == auto_stop)
-        iteration <- 10000000
+        iteration <- max_iter
     if (q > 1) {
        parameter_save <- matrix(0,nrow = num_nonzero + length(non_zero_f), ncol = q)
        U              <- matrix(0,nrow = num_nonzero + length(non_zero_f), ncol = q - 1)
@@ -72,11 +82,12 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
     normalized_const <- rep(0, dim(data$n_tk)[1])
     for (i in 1:iteration) {
       
-        if (FALSE == only_PA){
+        if ((!is.null(true_f)) || (FALSE == only_PA)){
             .normalized_constant(normalized_const,data$node_degree,theta,f,data$offset_tk) 
-        }
-        else normalized_const <- as.vector(data$n_tk[,non_zero_theta]%*%theta[non_zero_theta])
-    
+        } else if (is.null(true_f)) {
+            normalized_const <- as.vector(data$n_tk[,non_zero_theta]%*%theta[non_zero_theta])
+        } else stop("Not yet implemented functional")
+        
         time_non_zero     <- which(normalized_const != 0)
         non_zero_f_temp   <- which(f >= 0)
         if ((FALSE == only_PA) && (FALSE == only_f)) {
@@ -308,26 +319,7 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
           }
               return(w_k[non_zero_theta]*result)
       }
-#     # get the center of each bin
-       center_k    <- rep(0, length(theta)) 
-       center2_k   <- center_k
-      if (data$start_deg > 0) {
-          center_k[1:data$start_deg]  <- 0:(data$start_deg - 1)
-          center2_k[1:data$start_deg] <- 0:(data$start_deg - 1)
-      }
-      for (i in 1:data$G) {
-          if (data$begin_deg[i] != 0) {
-#              center_k[i]  <- round((data$begin_deg[i] + data$end_deg[i])/2)  
-           center_k[data$start_deg + i] <- round(data$begin_deg[i]*sqrt((data$begin_deg[i] + data$interval_length[i] - 1)/ data$begin_deg[i]))
-           #center2_k[data$start_deg + i] <- round((data$begin_deg[i] + data$end_deg[i])/2)  
-           center2_k[data$start_deg + i] <- data$end_deg[i]
-          } else {
-           center_k[data$start_deg + i] <- data$end_deg[i]  
-           #center2_k[i]  <- round((data$begin_deg[i] + data$end_deg[i])/2)   
-           center2_k[data$start_deg + i] <- data$end_deg[i]
-          }
-#        
-      }
+
       #interpolation
     if (TRUE == interpolate) {
     theta_nonzero <- which(theta != 0)
@@ -351,7 +343,32 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
              theta[(theta_nonzero[length(theta_nonzero)] + 1):length(theta)] <- 
               theta[theta_nonzero[length(theta_nonzero)]]  
     }    
-    theta   <- theta/theta[1]
+    # get the center of each bin
+    center_k    <- rep(0, length(theta)) 
+    center2_k   <- center_k
+    if (data$start_deg > 0) {
+        center_k[1:data$start_deg]  <- 0:(data$start_deg - 1)
+        center2_k[1:data$start_deg] <- 0:(data$start_deg - 1)
+    }
+    for (i in 1:data$G) {
+        if (data$begin_deg[i] != 0) {
+    #              center_k[i]  <- round((data$begin_deg[i] + data$end_deg[i])/2)  
+            center_k[data$start_deg + i] <- round(data$begin_deg[i]*sqrt((data$begin_deg[i] + data$interval_length[i] - 1)/ data$begin_deg[i]))
+            #center2_k[data$start_deg + i] <- round((data$begin_deg[i] + data$end_deg[i])/2)  
+            center2_k[data$start_deg + i] <- data$end_deg[i]
+        } else {
+              center_k[data$start_deg + i] <- data$end_deg[i]  
+              #center2_k[i]  <- round((data$begin_deg[i] + data$end_deg[i])/2)   
+              center2_k[data$start_deg + i] <- data$end_deg[i]
+          }
+  #        
+    }
+    if (only_PA == FALSE) {
+        beg     <- which(center_k >= data$deg_thresh & theta != 0)[1]
+    } else beg <- which(theta != 0)[1]    
+    theta <- theta/theta[beg]
+   
+
     if (FALSE == only_PA){
         .normalized_constant(normalized_const,data$node_degree,theta,f,data$offset_tk) 
     }
@@ -381,10 +398,14 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
      var_log_bin  <- cov_bin/ifelse(theta != 0, theta^2,1)
      upper_bin    <- exp(log(theta) + 2*sqrt(var_log_bin))
      lower_bin    <- exp(log(theta) - 2*sqrt(var_log_bin))
-   
+     
+
      non_zero_center <- center2_k > 0 & theta > 0 &  var_log_bin > 0 
-     alpha_center <- lm(log(theta[non_zero_center]) ~ log(center2_k[non_zero_center]),weights = 1/var_log_bin[non_zero_center])$coefficients[2]
-    ############# Return theta to A #####################################
+     if (FALSE == only_f)
+         alpha_center <- lm(log(theta[non_zero_center]) ~ log(center2_k[non_zero_center]),weights = 1/var_log_bin[non_zero_center])$coefficients[2]
+     else 
+         alpha_center <- NULL   
+     ############# Return theta to A #####################################
       A                           <- rep(0,data$deg.max)
       cov                         <- rep(0,data$deg.max)   
       weight_A                    <- rep(1,data$deg.max)

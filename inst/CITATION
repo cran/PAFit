@@ -1,0 +1,30 @@
+citHeader("To cite PAFit in your publications use:")
+citEntry("manual","Pham T, Sheridan P, Shimodaira H (2015) PAFit: Nonparametric Estimation of Preferential Attachment and Node Fitness in Temporal Complex Networks. R package version 0.7.5. Available at cran.r-project.org/package=PAFit",
+  title = {"PAFit: Nonparametric Estimation of Preferential Attachment and Node Fitness in Temporal Complex Networks"},
+    author = {"Thong Pham and Paul Sheridan and Hidetoshi Shimodaira"},
+    year = {2015},
+    note = {"R package version 0.7.5"},
+    url = {"cran.r-project.org/package=PAFit"}
+)
+
+citEntry("article", "Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796", 
+        header = NULL, footer = NULL, 
+	Author = {"Thong Pham and Paul Sheridan and Hidetoshi Shimodaira"},
+	Journal = {"PLOS ONE"},
+	Title = {"PAFit: A Statistical Method for Measuring Preferential
+Attachment in Temporal Complex Networks"},
+ year = {2015},
+ month = {9},
+ volumn = {10},
+ pages = {"e0137796"},
+ number = {9},
+ publisher = {"Public Library of Science"},
+ doi = {"10.1371/journal.pone.0137796"},
+ url= {"dx.doi.org/10.1371/journal.pone.0137796"}
+	)
+
+citEntry("inproceedings", "Pham T, Sheridan P, Shimodaira H (2015) Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity (in press). Proceedings of ECCS'14: European Conference on Complex Systems",
+	Author = {"Thong Pham and Paul Sheridan and Hidetoshi Shimodaira"},
+	Title = {"Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity (in press)"},
+	Booktitle = {"Proceedings of ECCS'14: European Conference on Complex Systems"},
+	Year = {2015})	
