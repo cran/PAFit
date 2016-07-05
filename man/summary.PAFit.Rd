@@ -27,15 +27,15 @@ Outputs summary information.
 Thong Pham \email{thongpham@thongpham.net}
 }
 \references{
-1. Pham, T. and Sheridan, P. and Shimodaira, H. (2015). Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity, in press. Proceedings of ECCS 2014: European Conference on Complex Systems.
+1. Pham, T., Sheridan, P. & Shimodaira, H (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
 
 2. Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796})
 }
 
 \examples{
 library("PAFit")
-data   <- GenerateNet(N = 1000,m = 1,mode = 1, alpha = 1, shape = 5, rate = 5)
-stats  <- GetStatistics(data$graph)
-result <- PAFit(stats)
+data   <- GenerateNet(N = 100,m = 1,mode = 1, alpha = 1, shape = 5, rate = 5)
+stats  <- GetStatistics(data$graph,deg_thresh = 1, Binning = TRUE, G = 50)
+result <- PAFit(stats,stop_cond = 10^-3)
 summary(result)
 }

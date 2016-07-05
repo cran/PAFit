@@ -1,4 +1,4 @@
-citHeader("To cite PAFit in your publications use:")
+citHeader("To cite PAFit in your publications please use:")
 citEntry("manual","Pham T, Sheridan P, Shimodaira H (2015) PAFit: Nonparametric Estimation of Preferential Attachment and Node Fitness in Temporal Complex Networks. R package version 0.7.5. Available at cran.r-project.org/package=PAFit",
   title = {"PAFit: Nonparametric Estimation of Preferential Attachment and Node Fitness in Temporal Complex Networks"},
     author = {"Thong Pham and Paul Sheridan and Hidetoshi Shimodaira"},
@@ -21,10 +21,24 @@ Attachment in Temporal Complex Networks"},
  publisher = {"Public Library of Science"},
  doi = {"10.1371/journal.pone.0137796"},
  url= {"dx.doi.org/10.1371/journal.pone.0137796"}
-	)
+)
 
-citEntry("inproceedings", "Pham T, Sheridan P, Shimodaira H (2015) Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity (in press). Proceedings of ECCS'14: European Conference on Complex Systems",
-	Author = {"Thong Pham and Paul Sheridan and Hidetoshi Shimodaira"},
-	Title = {"Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity (in press)"},
-	Booktitle = {"Proceedings of ECCS'14: European Conference on Complex Systems"},
-	Year = {2015})	
+citEntry("InBook", "Pham T, Sheridan P, Shimodaira H (2016) Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity. Proceedings of ECCS 2014: European Conference on Complex Systems. Springer International Publishing. doi:10.1007/978-3-319-29228-1_13",chapter = {"Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity"},
+header = NULL, footer = NULL, 
+author= {"Pham, Thong
+and Sheridan, Paul
+and Shimodaira, Hidetoshi"},
+editor= {"Battiston, Stefano
+and De Pellegrini, Francesco
+and Caldarelli, Guido
+and Merelli, Emanuela"},
+title = {"Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity"},
+bookTitle= {"Proceedings of ECCS 2014: European Conference on Complex Systems"},
+year= {2016},
+publisher= {"Springer International Publishing"},
+address= {"Cham"},
+pages= {"141--153"},
+isbn= {"978-3-319-29228-1"},
+doi= {"10.1007/978-3-319-29228-1_13"},
+url= {"http://dx.doi.org/10.1007/978-3-319-29228-1_13"}
+)

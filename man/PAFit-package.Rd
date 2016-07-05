@@ -5,14 +5,14 @@
 \description{
 A method for estimating jointly the attachment function \eqn{A_k} and node fitness \eqn{f_i} of a temporal complex network is implemented in this package.  The network's growth is assumed to follow a modified version of the fitness model, in which newly added edges, including newly edges between existed nodes, are connected to a degree \eqn{k} node \eqn{v_i} with probability proportional to the product of the attachment value \eqn{A_k} and the fitness value \eqn{f_i}.  The method makes no assumption on the functional form of either \eqn{A_k} or \eqn{f_i}.  By choosing suitable regularizations, good estimations of \eqn{A_k} and \eqn{f_i} can be obtained by maximizing the corresponding penalized log-likelihood function.  We also implement a fast estimation of confidence intervals based on the Hessian of the penalized log likelihood.  See the accompanying vignette for a tutorial.
 
-If you use this package for your projects, please run the command: citation("PAFit") for a list of references you should cite.
+For a list of references, please run the command: citation("PAFit").
 }
 \details{
 \tabular{ll}{
 Package: \tab PAFit\cr
 Type: \tab Package\cr
-Version: \tab 0.7.5\cr
-Date: \tab 2015-09-18\cr
+Version: \tab 0.7.9\cr
+Date: \tab 2016-07-09\cr
 License: \tab GPL-3 \cr
 }
 \itemize{
@@ -28,7 +28,7 @@ Maintainer: Thong Pham \email{thongpham@thongpham.net}
 
 
 \references{
-1. Pham, T. and Sheridan, P. and Shimodaira, H. (2015). Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity, in press. Proceedings of ECCS 2014: European Conference on Complex Systems.
+1. Pham, T., Sheridan, P. & Shimodaira, H (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
 
 2. Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796})
 }
@@ -45,8 +45,8 @@ Maintainer: Thong Pham \email{thongpham@thongpham.net}
 \keyword{maximum likelihood function}
 \examples{
 library("PAFit")
-data   <- GenerateNet(N = 1000,m = 1,alpha = 1, mode = 1, shape = 0, rate = 0)
+data   <- GenerateNet(N = 100,m = 1,alpha = 1, mode = 1, shape = 0, rate = 0)
 stats  <- GetStatistics(data$graph)
-result <- PAFit(stats,only_PA = TRUE)
+result <- PAFit(stats,only_PA = TRUE,stop_cond = 10^-3)
 plot(x = result,data = stats,plot = "A")
 }

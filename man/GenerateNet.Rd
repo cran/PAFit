@@ -7,10 +7,15 @@ A function to generate simulated networks from the Barabasi-Albert model or the 
 This function generates networks from the Barabasi-Albert model or the fitness model.  The number of edges of the new node at each time-step can be specified to be fixed, or followed a Poisson distribution.  In the latter case, the mean of the Poisson distribution is either held fixed or increased with time.
 }
 \usage{
-GenerateNet(N        = 1000, m      = 1    , mode     = c(1,2,3), alpha = 1, beta = 1, 
-            sat_at   = 100 , offset = 1    , rate     = 0       , shape = 0,
-            num_seed = 2   , prob_m = FALSE, increase = FALSE   , log   = FALSE)
+GenerateNet (
+ N=1000            , m = 1                , mode = c(1,2,3)  , alpha = 1, 
+ beta = 1          , sat_at = 100         , offset = 1       , rate = 0  , 
+ shape = 0         , mode_f = c("gamma")  , num_seed = 2     , prob_m = FALSE   ,   
+ meanlog = 0       , sdlog = 1            , scale_pareto = 0.6,
+ shape_pareto = 2.5, increase = FALSE     , multiple_node = 1, specific_start = NULL, 
+ log = FALSE       , custom_PA = NULL)
 }
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{N}{
@@ -41,7 +46,22 @@ Numeric. The rate parameter in the Gamma prior for node fitness. If either rate 
   \item{shape}{
 Numeric. The shape parameter in the Gamma prior for node fitness. If either rate or shape is 0, node fitness \eqn{f} is fixed at \eqn{1} (i.e. Barabasi-Albert model)
 }
-  \item{num_seed}{
+  \item{mode_f}{
+String. Indicates the true distribution for node fitness. "gamma" = gamma distribution, "log_normal" = log-normal distribution. "power_law" = power-law (pareto) distribution. Default value is "gamma".
+}
+  \item{meanlog}{
+Numeric. Mean of the log-normal distribution in log scale. Default value is \eqn{0}.
+}
+\item{sdlog}{
+Numeric. Standard deviation of the log-normal distribution in log scale. Default value is \eqn{1}.
+}
+\item{scale_pareto}{
+Numeric. The scale parameter of the Pareto distribution. Default value is \eqn{0.6}.
+}
+\item{shape_pareto}{
+Numeric. The shape parameter of the Pareto distribution. Default value is \eqn{2.5}.
+}
+\item{num_seed}{
 Integer. The number of nodes of the seed graph (the initial state of the network). Default value is \eqn{2}.
 }
  \item{prob_m}{
@@ -51,8 +71,17 @@ distribution. If prob_m == TRUE, the number of edges of a new node follows a Poi
 \item{increase}{
 Logical. Indicates whether we increase the mean of the Poisson distribution over time. If increase == FALSE, the mean is fixed at m. If increase == TRUE, the way the mean increases depends on the value of \eqn{log}. Default value is FALSE.
 }
+\item{multiple_node}{
+Numeric. The number of new nodes at each time-step. Default value is \eqn{1}.
+}
+\item{specific_start}{
+Numeric. If \eqn{specific_start} is specified, then all the time-steps from time-step \eqn{1} to \eqn{specific_start} are grouped to become the initial time-step in the final output. This option is used when we want to create a network with a large initial network. Default value is \eqn{NULL}.
+}
 \item{log}{
 Logical. Indicates how to increase the mean of the Poisson distribution. If log == TRUE, the mean increases logarithmically with the number of current nodes. If log == FALSE, the mean increases linearly with the number of current nodes. Default value is FALSE.
+}
+\item{custom_PA}{
+Numeric vector. This is the user-input PA function. If \eqn{custom_PA} is specified, then \eqn{mode} is ignored, and the PA function \eqn{custom_PA} is used to grow the network. Default value is \eqn{NULL}.
 }
 }
 
@@ -65,7 +94,7 @@ The output is a List contains the following two fields:
 Thong Pham \email{thongpham@thongpham.net}
 }
 \references{
-1. Pham, T. and Sheridan, P. and Shimodaira, H. (2015). Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity, in press. Proceedings of ECCS 2014: European Conference on Complex Systems.
+1. Pham, T., Sheridan, P. & Shimodaira, H (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
 
 2. Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796})
 }

@@ -1,7 +1,7 @@
 # function to summarize statistics from a growing network  2015-3-11 Thong Pham
 GetStatistics <-
-function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = FALSE,G = 1000, start_deg = 0,  
-         deg_threshold = 1, CompressMode = c(0,1,2,3), CompressRatio = 0.5 , CustomTime = NULL){
+function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = TRUE, G = 200, start_deg = 0,  
+         deg_threshold = 0, CompressMode = c(0,1,2,3), CompressRatio = 0.5 , CustomTime = NULL){
 
     
     time_stamp        <- data[,3]
@@ -115,23 +115,24 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
     
     if (FALSE == only_PA) {
         offset_tk               <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G) 
+        offset_m_tk             <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G) 
         z_j                     <- rep(0,N_new)
     
         node_degree <- matrix(-1,nrow = T_compressed - 1, ncol = N_new) 
        
     } else {
         offset_tk               <- matrix(0,0,0)
+        offset_m_tk             <- matrix(0,0,0) 
         z_j                     <- vector()  
         node_degree             <- matrix(0,0,0)
     }
-   
     undirected  = 0;
     max_node_id = max(node_id_old);
     only_PA_num = ifelse(only_PA,1,0);
     .get_stats(time_stamp,unique_time,in_node,out_node,node_id_old,node_id,bin_vector, max_node_id, undirected, 
               only_PA_num,              
               compressed_unique_time,
-              Sum_m_k,n_tk,m_tk,m_t,offset_tk,z_j,node_degree)
+              Sum_m_k,n_tk,m_tk,m_t,offset_tk,z_j,node_degree,offset_m_tk)
 
     if (FALSE == only_PA) {
       names(z_j)            <- node_id
@@ -151,10 +152,13 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
     node_degree                    <- node_degree[,true,drop=FALSE]
     
 
-    result  <- list(offset_tk = offset_tk,net_type = net_type[1], n_tk = n_tk,m_tk = m_tk, bin_vector = bin_vector, Sum_m_k = Sum_m_k,
+    result  <- list(offset_tk = offset_tk, offset_m_tk = offset_m_tk, net_type = net_type[1], 
+                    n_tk = n_tk,m_tk = m_tk, bin_vector = bin_vector, 
+                    Sum_m_k = Sum_m_k,
                     node_degree = node_degree,m_t = m_t,z_j = z_j, initial_nodes = initial_nodes,
                 deg_thresh = deg_threshold, final_deg = final_deg, only_PA = only_PA, 
-                increase = increase, start_deg = start_deg, Binning = Binning, G = G, 
+                increase = increase, start_deg = start_deg, 
+                Binning = Binning, G = G, 
                 CompressMode = CompressMode[1], f_position = f_position, compressed_unique_time = compressed_unique_time, begin_deg = begin_deg, end_deg = end_deg,
                 interval_length = interval_length,node_id = node_id_old, N = N, T = T, T_compressed = T_compressed,deg.max = deg.max, CompressRatio = CompressRatio , CustomTime = CustomTime)
     class(result) <- "PAFitData"

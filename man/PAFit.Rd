@@ -5,19 +5,23 @@
 A function to estimate the attachment function and node fitness in temporal complex networks
 }
 \description{
-From a PAFitData object, which contains summary statistics summerized from the dataset, PAFit estimates the attachment function \eqn{A_k} and node fitness \eqn{f_i} by penalized log-likelihood maximization.  It also calculates confidence intervals for \eqn{A_k} and \eqn{f_i}.  Estimation of the attachment function in isolation (while fixing \eqn{f_i = 1}) can be specified by setting only_PA = TRUE.  Estimation of node fitness in isolation (fixing either \eqn{A_k = k} or \eqn{A_k = 1}) can be specified by setting only_f = TRUE.
+From a PAFitData object, which contains summary statistics summerized from the dataset, PAFit estimates the attachment function \eqn{A_k} and node fitness \eqn{eta+} by penalized log-likelihood maximization.  It also calculates confidence intervals for \eqn{A_k} and \eqn{eta_i}.  Estimation of the attachment function in isolation (while fixing \eqn{eta_i = 1}) can be specified by setting only_PA = TRUE.  Estimation of node fitness in isolation (fixing either \eqn{A_k = k} or \eqn{A_k = 1}) can be specified by setting only_f = TRUE.
 }
 \usage{
-PAFit(data, only_PA , only_f, mode_f, true_A, true_f,
-shape, rate, auto_lambda, ratio, lambda, weight_PA_mode, auto_stop, stop_cond,
-iteration , max_iter, debug , step_size, q , normalized_f, interpolate,...)
+PAFit (data, only_PA = FALSE, only_f = FALSE, 
+       mode_f = c("Linear_PA", "Constant_PA","Log_linear"),
+       true_A = NULL, true_f = NULL, s = 1, auto_lambda = TRUE, 
+       r = 0.01, lambda = 1, weight_PA_mode = 1, auto_stop = TRUE,
+       stop_cond = 10^-6, iteration = 20, max_iter = 1000, 
+       debug = FALSE, alpha_start = 1, normalized_f = FALSE, 
+       interpolate = FALSE, ...)
 }
 \arguments{
   \item{data}{
 An object of class "PAFitData" containing all the summary statistics summerized from the data by the function GetStatistics
 }
 \item{only_PA}{
-Logical. TRUE means that the attachment function \eqn{A_k} is estimated in isolation(fixing \eqn{f_i = 1}). Default is FALSE.
+Logical. TRUE means that the attachment function \eqn{A_k} is estimated in isolation(fixing \eqn{eta_i = 1}). Default is FALSE.
 }
 \item{only_f}{
 Logical. TRUE means that the fitness function is estimated in isolation. Default is FALSE.
@@ -26,22 +30,20 @@ Logical. TRUE means that the fitness function is estimated in isolation. Default
 String. Only effective when only_f == TRUE. If mode_f == "Linear_PA" then \eqn{A_k = k}. If mode_f == "Constant_PA" then \eqn{A_k = 1}. Default values is "Linear_PA".
 }
 \item{true_A}{
-
+Numeric vector. If the true_A is supplemented, then only fitness is estimated.
 }
 \item{true_f}{
+Numeric vector. If the true_f is supplemented, then only PA is estimated.
+}
+\item{s}{
+Numeric. The regularization parameter \eqn{s} for node fitness. Default value is \eqn{1}.
+}
 
-}
-\item{shape}{
-Numeric. The shape parameter in the Gamma prior for \eqn{f_i}. Default value is \eqn{0.1}.
-}
-  \item{rate}{
-Numeric. The rate parameter in the Gamma prior for \eqn{f_i}. Default value is \eqn{0.1}. Either Shape == 0 or Rate == 0 means no regularization for \eqn{f_i}.
-}
 \item{auto_lambda}{
 Logical. If auto_lambda == TRUE, lambda will be determined automatically from the data. Default is TRUE.
 }
-\item{ratio}{
-Numeric. The ratio between strength of the regularization term and the total number of data. Default is \eqn{0}.
+\item{r}{
+Numeric. The regularization parameter \eqn{r} for the PA function. Default value is \eqn{0.01}.
 }
 
 \item{lambda}{
@@ -59,8 +61,7 @@ Numeric. The number of iterations. Ignored if auto_stop == TRUE. Default value i
 Numeric. The maximum number of iterations. Regardless of other settings, the algorithm will stop once the number of  iterations reaches this threshold. Default value is \eqn{1000}.
 }
 \item{debug}{Logical. if debug == TRUE, the value of the log likelihood function is printed out at each step. Defaule is FALSE.}
-\item{step_size}{Numeric. A numeric value between \eqn{0} and \eqn{1}. Determines the convex combination of the default direction given by the MM update and the quasi-Newton direction. Only effective if \eqn{q \ge 2}. \eqn{step_size = 1} means we ignore the default MM direction. Default value is \eqn{1}.}
-\item{q}{Integer. The number of previous values used in the quasi-Newton acceleration of Zhou et al. A quasi-newton acceleration for high-dimensional optimization algorithms (2011). The acceleration is activated only when \eqn{q \ge 2}. Default value is \eqn{1}.}
+\item{alpha_start}{Numeric. The starting value for alpha when we use the model \eqn{k^\alpha}. Default value is \eqn{1}.}
 \item{normalized_f}{Logical. Indicates whether we should normalize the estimated value of \eqn{f} after estimation. Default value is FALSE.}
 \item{interpolate}{Logical. Indicates whether we should perform interpolation for the missing values of \eqn{A_k}. Default value is FALSE.}
 \item{\dots}{
@@ -95,7 +96,7 @@ Thong Pham
 }
 
 \references{
-1. Pham, T. and Sheridan, P. and Shimodaira, H. (2015). Nonparametric estimation of the preferential attachment function in complex networks: evidence of deviations from log linearity, in press. Proceedings of ECCS 2014: European Conference on Complex Systems.
+1. Pham, T., Sheridan, P. & Shimodaira, H (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
 
 2. Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796})
 }
@@ -103,13 +104,13 @@ Thong Pham
 
 \examples{
 library("PAFit")
-data   <- GenerateNet(N = 1000,m = 1, mode = 1, alpha = 1, shape = 5, rate = 5)
+data   <- GenerateNet(N = 100,m = 1, mode = 1, alpha = 1, shape = 5, rate = 5)
 stats  <- GetStatistics(data$graph)
-result <- PAFit(stats)
+result <- PAFit(stats,stop_cond = 10^-3)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ package }
+\keyword{package }
 \keyword{fitness model}
 \keyword{Preferential Attachment function}
 \keyword{Minorize-Maximization algorithms}
