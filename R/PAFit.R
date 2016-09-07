@@ -7,7 +7,7 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
                   max_iter = 1000,
                   debug = FALSE,
                   alpha_start = 1,
-                  normalized_f = FALSE, interpolate = FALSE, ...) {
+                  normalized_f = FALSE, interpolate = TRUE, ...) {
     if ((data$only_PA == TRUE) & (only_PA == FALSE)) {
         stop("Error: the data do not support estimation of node fitness. 
               Please re-run GetStatistics again with the option 'only_PA = FALSE', 
@@ -115,6 +115,8 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
           plus_1  <- non_zero_theta[ok_log[-c(1, 2, 3, num_ok_log)]]
           plus_2  <- non_zero_theta[ok_log[-c(1, 2, 3, 4)]] 
     }
+    PA_offset <- 1
+    theta[1]  <- PA_offset
     
     cal_reg_A <- function() {
       if (0 == mode_reg_A) {
@@ -217,20 +219,35 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
             .normalized_constant(normalized_const, data$node_degree,theta,f,data$offset_tk,offset)
             time_non_zero     <- which(normalized_const != 0)
         }
-        
+        #### Update PA_offset if mode_f = "Linear_PA" #####
+        if ((TRUE == only_f) && (mode_f = "Linear_PA")) {
+            PA_offset <- .update_PA_offset(normalized_const,f,data$node_degree,data$m_t,data$Sum_m_k,
+                                           data$offset_tk);
+            theta[1]  <- PA_offset
+        }
         #####################  Update A #######################
         if (FALSE == only_f) {
             if ((FALSE == only_PA) || ((TRUE == only_PA) && (!is.null(true_f)))) {
                 #print("problem in coeff theta")
                 temp5  <- .coeff_theta(data$node_degree, f, normalized_const,data$m_t,data$start_deg + data$G)   
-                
-                temp4  <- temp5[non_zero_theta] + colSums(data$m_t[time_non_zero] / normalized_const[time_non_zero] * offset *
+                if (length(time_non_zero) > 1) {
+                    temp4  <- temp5[non_zero_theta] + colSums(data$m_t[time_non_zero] / normalized_const[time_non_zero] * offset *
                                                           data$offset_tk[time_non_zero,non_zero_theta])
+                } else {
+                    temp4  <- temp5[non_zero_theta] + data$m_t[time_non_zero] / normalized_const[time_non_zero] * offset *
+                                                              data$offset_tk[time_non_zero,non_zero_theta]  
+                }
+                
               
             }
             else {
-                temp4 <- colSums(data$m_t[time_non_zero]/normalized_const[time_non_zero] * 
+                if (length(time_non_zero) > 1) {  
+                    temp4 <- colSums(data$m_t[time_non_zero]/normalized_const[time_non_zero] * 
                                      data$n_tk[time_non_zero,non_zero_theta])
+                } else {
+                    temp4 <- data$m_t[time_non_zero]/normalized_const[time_non_zero] * 
+                                     data$n_tk[time_non_zero,non_zero_theta]  
+                }
             }
             if (lambda <= 0) {
               
@@ -367,31 +384,37 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
          #flush.console();
         # Remember here theta is always the degree sequence,i.e. we need to calculate the power alpha of this deg. seq.    
          ##################### Update f ######################
-         .normalized_constant_alpha(normalized_const, alpha,data$node_degree,theta,f,data$offset_tk,offset)
+         .normalized_constant_alpha(normalized_const, alpha,PA_offset,data$node_degree,theta,f,data$offset_tk,offset)
          if (FALSE == only_PA)  {
-             .update_f_alpha(f,non_zero_f,alpha,data$node_degree,theta,data$z_j,normalized_const,data$m_t,shape,rate)
+             .update_f_alpha(f,non_zero_f,alpha,PA_offset,data$node_degree,theta,data$z_j,normalized_const,data$m_t,shape,rate)
              # update offset
              # if (data$deg_thresh > 0)
              # offset <- .update_offset_alpha(alpha,data$offset_tk, data$offset_m_tk, theta, normalized_const,data$m_t, shape,rate)
          }
          #####################  Update alpha #######################  
-         .normalized_constant_alpha(normalized_const, alpha,data$node_degree,theta,f,data$offset_tk,offset)
-         alpha <- .update_alpha(non_zero_theta,
-                                normalized_const,f,
-                                theta,data$node_degree,data$m_t,data$Sum_m_k,data$offset_tk,offset) 
+         .normalized_constant_alpha(normalized_const, alpha,PA_offset, data$node_degree,theta,f,data$offset_tk,offset)
+         alpha     <- .update_alpha(non_zero_theta,
+                                    normalized_const,f, PA_offset,
+                                    theta,data$node_degree,data$m_t,data$Sum_m_k,data$offset_tk,offset) 
+         .normalized_constant_alpha(normalized_const, alpha,PA_offset, data$node_degree,theta,f,data$offset_tk,offset)
+         PA_offset <- .update_PA_offset(normalized_const,f,data$node_degree,data$m_t,data$Sum_m_k,
+                                         data$offset_tk);
          #print(alpha)
-         .normalized_constant_alpha(normalized_const, alpha,data$node_degree,theta,f,data$offset_tk,offset)
+         .normalized_constant_alpha(normalized_const, alpha, PA_offset, data$node_degree,theta,f,data$offset_tk,offset)
           time_non_zero     <- which(normalized_const != 0)
           log_likelihood <- c(log_likelihood, sum(data$z_j[non_zero_f] * log(f[non_zero_f])) +
                               alpha * sum(data$Sum_m_k[non_zero_theta] * log(theta[non_zero_theta])) -
                               sum(data$m_t[time_non_zero] * log(normalized_const[time_non_zero])) + 
                               ((shape - 1) * (sum(log(f[non_zero_f]))) - rate * sum(f[non_zero_f])) + 
                               sum(data$offset_m_tk)*log(offset) + (shape - 1) * log(offset) - rate * offset)  
+          log_likelihood[length(log_likelihood)] <- log_likelihood[length(log_likelihood)] + data$Sum_m_k[1] * 
+                                                                                             log(PA_offset);
           alpha_series <- c(alpha_series,alpha)
       }
     }
- 
-    theta <- theta^alpha
+    theta    <- theta^alpha
+    if (only_f == TRUE)
+        theta[1] <- PA_offset  
     ########## End of Iteration ########################    
         
       if (normalized_f == TRUE) {
@@ -467,29 +490,36 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
           return(w_k[non_zero_theta[ok_log]]*result)
       }
 
-      #interpolation
-    if (TRUE == interpolate) {
-    theta_nonzero <- which(theta != 0)
-    if (length(theta_nonzero) > 0)
-      if (theta_nonzero[1] > 1) {
-          theta[1:(theta_nonzero[1] - 1)]   <- theta[theta_nonzero[1]]  
-          cov_bin[1:(theta_nonzero[1] - 1)] <- cov_bin[theta_nonzero[1]] 
-      }
-      if (length(theta_nonzero) > 1) {
-          for (i in 1:(length(theta_nonzero) - 1))
-              if (theta_nonzero[i+1] > theta_nonzero[i] + 1) {
-              regress <- lm(c(log(theta[theta_nonzero[i]]),log(theta[theta_nonzero[i+1]]))~ 
-                         c(log(center_k[theta_nonzero[i]]),log(center_k[theta_nonzero[i+1]]))) 
-              for (j in (theta_nonzero[i] + 1):(theta_nonzero[i+1] - 1))
-                  theta[j] <- exp(log(center_k[j])*regress$coefficients[2] + 
-                                    regress$coefficients[1])           
-              }  
-      }
-      if (length(theta_nonzero) > 0)
-         if (theta_nonzero[length(theta_nonzero)] < length(theta))
-             theta[(theta_nonzero[length(theta_nonzero)] + 1):length(theta)] <- 
-              theta[theta_nonzero[length(theta_nonzero)]]  
-    }    
+      #interpolation for PA function
+      #but only if (FALSE == only_f)
+    if ((FALSE == only_f) && (mode_f != "Log_linear")) {  
+        if (TRUE == interpolate) {
+            theta_nonzero <- which(data$Sum_m_k != 0)
+            if ((only_f == TRUE) && ((mode_f = "Linear_PA") || (mode_f = "Log_linear"))) {
+                if (0 != PA_offset)    
+                    theta_nonzero <- c(1,theta_nonzero)  
+            }
+            if (length(theta_nonzero) > 0)
+                if (theta_nonzero[1] > 1) {
+                    theta[1:(theta_nonzero[1] - 1)]   <- theta[theta_nonzero[1]]  
+                #cov_bin[1:(theta_nonzero[1] - 1)] <- cov_bin[theta_nonzero[1]] 
+                }
+            if (length(theta_nonzero) > 1) {
+                for (i in 1:(length(theta_nonzero) - 1))
+                    if (theta_nonzero[i+1] > theta_nonzero[i] + 1) {
+                        regress <- lm(c(log(theta[theta_nonzero[i]]),log(theta[theta_nonzero[i+1]]))~ 
+                                      c(log(center_k[theta_nonzero[i]]),log(center_k[theta_nonzero[i+1]]))) 
+                    for (j in (theta_nonzero[i] + 1):(theta_nonzero[i+1] - 1))
+                        theta[j] <- exp(log(center_k[j])*regress$coefficients[2] + 
+                                        regress$coefficients[1])           
+                    }  
+            }
+            if (length(theta_nonzero) > 0)
+                if (theta_nonzero[length(theta_nonzero)] < length(theta))
+                    theta[(theta_nonzero[length(theta_nonzero)] + 1):length(theta)] <- 
+                    theta[theta_nonzero[length(theta_nonzero)]]  
+        }
+    }
 
     if (only_PA == FALSE) {
         beg     <- which(center_k >= data$deg_thresh & theta != 0)[1]
@@ -541,7 +571,7 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
      
 
      non_zero_center <- center2_k > 0 & theta > 0 &  var_log_bin > 0 
-     if (FALSE == only_f)
+     if ((FALSE == only_f) && (mode_f != "Log_linear"))
          alpha_center <- lm(log(theta[non_zero_center]) ~ log(center2_k[non_zero_center]),weights = 1/var_log_bin[non_zero_center])$coefficients[2]
      else 
          alpha_center <- NULL   
@@ -576,7 +606,7 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
       log_A       <- log(A)
       log_k       <- log(k_non_zero)
       
-      if ((only_f == FALSE) && (length(k_non_zero) > 0))  {
+      if (((only_f == FALSE) && (mode_f != "Log_linear")) && (length(k_non_zero) > 0))  {
               if (0 == k_non_zero[1]) 
                   linear_fit  <- lm(log_A[-1] ~ log_k[-1] , weights = 1 / (weight_A[-1]*var_log[-1])) 
               else
@@ -616,9 +646,9 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
                      k             = k_non_zero ,   weight_of_A  = weight_A, var_logA       = var_log,  #alpha_center = alpha_center,      
                      upper_A       = upper_A,       lower_A      = lower_A,  #alpha = alpha_center,
                      alpha          = alpha, true_A = true_A, true_f = true_f,
-                     var_bin = cov_bin,
+                     var_bin = cov_bin, PA_offset = PA_offset,
                      f             = f_new,         var_f        = cov_f_new, only_PA = only_PA, only_f = only_f,
-                   upper_f       = upper_f,       lower_f      = lower_f,  log_likelihood = log_likelihood, lambda = lambda, 
+                   upper_f       = upper_f,       lower_f      = lower_f,  objective_value = log_likelihood, lambda = lambda, 
                    shape = shape, rate = rate, normalized_f = normalized_f, deg_threshold = data$deg_thresh,
                    stop_cond = stop_cond, auto_lambda = auto_lambda, ratio = ratio, G = data$G,shape = shape, rate = rate, 
                    offset = offset)

@@ -1,4 +1,4 @@
-# function to summarize statistics from a growing network  2015-3-11 Thong Pham
+# function to summarize statistics from a growing network 
 GetStatistics <-
 function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = TRUE, G = 200, start_deg = 0,  
          deg_threshold = 0, CompressMode = c(0,1,2,3), CompressRatio = 0.5 , CustomTime = NULL){
@@ -7,13 +7,15 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
     time_stamp        <- data[,3]
     in_node           <- data[,2]
     out_node          <- data[,1]
+    out_node          <- out_node[out_node != -1]
     node_id           <- sort(union(in_node,out_node))
    
     if (net_type[1] == "directed") {
         deg           <- table(in_node)
     } else
     if (net_type[1] == "undirected")
-        deg           <- table(as.vector(as.matrix(data[,1:2])))        
+        deg           <- table(c(in_node,out_node))     
+        #deg           <- table(as.vector(as.matrix(data[,1:2])))        
     
     deg_new           <- rep(0,length(node_id))
     names(deg_new)    <- node_id

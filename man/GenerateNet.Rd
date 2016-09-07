@@ -2,9 +2,9 @@
 \alias{GenerateNet}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-A function to generate simulated networks from the Barabasi-Albert model or the fitness model}
+A function to generate simulated networks from the General Temporal (GT) model}
 \description{
-This function generates networks from the Barabasi-Albert model or the fitness model.  The number of edges of the new node at each time-step can be specified to be fixed, or followed a Poisson distribution.  In the latter case, the mean of the Poisson distribution is either held fixed or increased with time.
+This function generates networks from the GT model, a generative temporal network model that includes many well-known models such as the Barabasi-Albert model or the fitness model as special cases. The number of edges of the new node at each time-step can be specified to be fixed, or followed a Poisson distribution.  In the latter case, the mean of the Poisson distribution is either held fixed or increased with time.
 }
 \usage{
 GenerateNet (
@@ -88,15 +88,17 @@ Numeric vector. This is the user-input PA function. If \eqn{custom_PA} is specif
 \value{
 The output is a List contains the following two fields:
 \item{graph}{a 3-column matrix, where each row contains information of one edge, in the form of (from_id, to_id, time_stamp). From_id is the id of the source, to_id is the id of the destination.}
-\item{fitness}{fitness values of nodes in the network}
+\item{fitness}{fitness values of nodes in the network. The name of each value is the ID of the node.}
 }
 \author{
 Thong Pham \email{thongpham@thongpham.net}
 }
 \references{
-1. Pham, T., Sheridan, P. & Shimodaira, H (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
+1. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
 
-2. Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796})
+2. Pham, T., Sheridan, P. & Shimodaira, H. (2015). PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796}).
+
+3. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Joint Estimation of Preferential Attachment and Node Fitness in Growing Complex Networks. Scientific Reports 6, Article number: 32558. doi:10.1038/srep32558   (\url{www.nature.com/articles/srep32558}).
 }
 
 \examples{

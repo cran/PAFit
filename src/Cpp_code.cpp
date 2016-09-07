@@ -35,7 +35,8 @@ int normalized_constant(      NumericVector& norm,
 
 // [[Rcpp::export(".normalized_constant_alpha")]]
 int normalized_constant_alpha(      NumericVector& norm,
-                              const double       & alpha,      
+                              const double       & alpha,   
+                              const double       & PA_offset,  
                               const NumericMatrix& degree, 
                               const NumericVector& theta,
                               const NumericVector& f, 
@@ -49,10 +50,14 @@ int normalized_constant_alpha(      NumericVector& norm,
     double total = 0;
     for (long j = 0; j < N; j++)
       if (degree(i,j) >= 0) {
-        total += pow(theta.at(degree.at(i,j)),alpha)*f.at(j);
+          if  (degree(i,j) > 0) 
+              total += (pow(theta.at(degree.at(i,j)),alpha)) * f.at(j);
+          else 
+              total += PA_offset * f.at(j);  
       }
-      for (long k = 0; k < K; ++k)
-        total += offset_tk.at(i,k)*pow(theta.at(k),alpha);
+      for (long k = 1; k < K; ++k)
+          total += offset_tk.at(i,k) * pow(theta.at(k),alpha);
+      total += offset_tk.at(i,0) * PA_offset;
       norm.at(i) = total;
   }
   return 0;
@@ -137,9 +142,9 @@ int get_stats(CharacterVector    & time_stamp,
       long in_node_ind  = node_array.at(in_node(edge_count)); 
       long out_node_ind = node_array.at(out_node(edge_count)); 
       // consider the in-node first
-      //the node has not appeared in the previous time step
+      //the in-node has not appeared in the previous time step
       if (0 == is_appear[in_node_ind]) {
-          //the node has not appeared in previous edges of the current time step
+          //the in-node has not appeared in previous edges of the current time step
           if (0 == appear_onestep.at(in_node_ind)) { 
               appear_onestep.at(in_node_ind)  = 1;
               degree_vector.at(in_node_ind)   = 1;
@@ -149,7 +154,7 @@ int get_stats(CharacterVector    & time_stamp,
                   ++offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
               
           }
-          else { //the node has already appeared in some edges of the current time step
+          else { //the in-node has already appeared in some edges of the current time step
               if ((0 == only_PA)&& (0 == ok_array.at(in_node(edge_count))))    
                   --offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
               --n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
@@ -158,7 +163,7 @@ int get_stats(CharacterVector    & time_stamp,
               if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count))))   
                   ++offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
           }     
-    } // the node is already appeared in the previous time-step
+    } // the in-node is already appeared in the previous time-step
       else { 
            if ((0 == only_PA) && (1 == ok_array.at(in_node(edge_count))))
                    z_j(ok_index.at(in_node(edge_count)))++;
@@ -177,7 +182,7 @@ int get_stats(CharacterVector    & time_stamp,
           }
       }
       //consider next the Out node
-      //the node has not appeared in the previous time step
+      //the out node has not appeared in the previous time step
       if (0 == is_appear.at(out_node_ind)) {
           //the network is undirected, so this out_node is also counted
           if (1 == undirected) {
@@ -210,7 +215,7 @@ int get_stats(CharacterVector    & time_stamp,
           }
           appear_onestep.at(out_node_ind)       = 1;
       } 
-      // the node is already appeared in the previous time-step
+      // the out node is already appeared in the previous time-step
       else {
            //the network is undirected, so this out_node is also counted  
           if (1 == undirected) {  
@@ -350,6 +355,7 @@ double update_offset_alpha(
 int update_f_alpha(      NumericVector& f, 
                    const NumericVector& non_zero_f,
                    const double       & alpha,
+                   const double       & PA_offset,
                    const NumericMatrix& degree, 
                    const NumericVector& theta, 
                    const NumericVector& z_j,
@@ -364,10 +370,16 @@ int update_f_alpha(      NumericVector& f,
   for (long j = 0; j < N_nozero; j++) {
     double total = 0;
     for (long i = 0; i < T; i++)
-      if ((degree.at(i,non_zero_f(j) - 1) >= 0) && (normalized_const.at(i) != 0)) {
-        total += m_t.at(i) / normalized_const.at(i) * pow(theta.at(degree.at(i,non_zero_f.at(j) - 1)),alpha);
-      }
-      f.at(non_zero_f.at(j) - 1) = (z_j.at(non_zero_f.at(j) - 1) + shape - 1)/(total + rate);
+        if ((degree.at(i,non_zero_f(j) - 1) >= 0) && (normalized_const.at(i) != 0)) {
+            if (degree(i,j) > 0)   
+                total += m_t.at(i) / normalized_const.at(i) * (pow(theta.at(degree.at(i,non_zero_f.at(j) - 1)),alpha));
+             else 
+                 total += m_t.at(i) / normalized_const.at(i) * (PA_offset);   
+        }
+        if (z_j(non_zero_f(j) - 1) + shape - 1 <= 0)
+            f(non_zero_f(j) - 1) = 1;
+        else 
+            f.at(non_zero_f.at(j) - 1) = (z_j.at(non_zero_f.at(j) - 1) + shape - 1)/(total + rate);
   }
   return 0;
 }
@@ -377,6 +389,7 @@ double update_alpha(
                  const NumericVector& non_zero_theta,  
                  const NumericVector& norm,
                  const NumericVector& f, 
+                 const double       & PA_offset,
                  const NumericVector& theta,
                  const NumericMatrix& degree, 
                  const NumericVector& m_t,
@@ -392,32 +405,62 @@ double update_alpha(
 
   for (long t = 0; t < T; t++) 
       for (long i = 0; i < N; ++i) {
-      if ((degree(t,i) >= 0) && (norm(t) != 0)){
+      if ((degree(t,i) > 0) && (norm(t) != 0)){
         f_sum.at(degree(t,i)) += m_t.at(t)*f.at(i)/norm.at(t);
       }
   }
   for (long t = 0; t < T; t++) 
       for (long k = 0; k < K; ++k) {
-          if ((degree(t,k) >= 0) && (norm(t) != 0) ){
+          if ((degree(t,k) > 0) && (norm(t) != 0) ){
               f_sum.at(k) += offset_tk(t,k) * m_t.at(t) * offset/norm.at(t);
           }
   }
-      
-  double first  = 0;
-  for(long k = 0; k <Sum_m_k.size(); ++k)
-      first += Sum_m_k.at(k) * log(theta.at(k));  
+
  
   auto f_1 = [&](double x) {
       double temp = 0;
-      for (long k = 0; k < non_zero_theta.size(); ++k)
+      double first  = 0;
+    for(long k = 0; k <Sum_m_k.size(); ++k)
+      for (long k = 0; k < non_zero_theta.size(); ++k) {
           temp += log(theta.at(non_zero_theta.at(k) - 1)) * pow(theta.at(non_zero_theta.at(k) - 1),x) *
-              f_sum.at(non_zero_theta.at(k) - 1);  
+              f_sum.at(non_zero_theta.at(k) - 1);
+          if (theta.at(non_zero_theta.at(k) - 1) > 0)
+          first += Sum_m_k.at(k) * log(theta.at(non_zero_theta.at(k) - 1)) * pow(theta.at(non_zero_theta.at(k) - 1),x) / 
+                   (pow(theta.at(non_zero_theta.at(k) - 1),x));  
+      }
       return(first - temp);};
   double alpha = my_zeroin(0,2,f_1,DBL_EPSILON,500);    
   //printf("alpha inside C: %f\n",alpha);    
   return alpha;
 }
 
+
+// [[Rcpp::export(".update_PA_offset")]]
+double update_PA_offset(
+    const NumericVector& norm,
+    const NumericVector& f, 
+    const NumericMatrix& degree, 
+    const NumericVector& m_t,
+    const NumericVector& Sum_m_k,
+    const NumericMatrix& offset_tk) {
+  long T = degree.nrow();     // number of time-steps
+  long N = degree.ncol();     // number of nodes
+ //long K = offset_tk.ncol();  // maximum degree 
+  double second_temp = 0;
+  
+  for (long t = 0; t < T; t++) 
+    for (long i = 0; i < N; ++i) {
+      if ((degree(t,i) == 0) && (norm(t) != 0)){
+        second_temp += m_t.at(t)*f.at(i)/norm.at(t);
+      }
+    }
+  for (long t = 0; t < T; t++) 
+      second_temp += offset_tk(t,0) * m_t.at(t) /norm.at(t);
+  
+  double result = Sum_m_k.at(0) * 1.0 / second_temp;
+  return result;
+
+}
 
 // [[Rcpp::export(".coeff_theta")]]
 NumericVector coeff_theta( const NumericMatrix& degree,  

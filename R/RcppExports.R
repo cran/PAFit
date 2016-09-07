@@ -5,8 +5,8 @@
     .Call('PAFit_normalized_constant', PACKAGE = 'PAFit', norm, degree, theta, f, offset_tk, offset)
 }
 
-.normalized_constant_alpha <- function(norm, alpha, degree, theta, f, offset_tk, offset) {
-    .Call('PAFit_normalized_constant_alpha', PACKAGE = 'PAFit', norm, alpha, degree, theta, f, offset_tk, offset)
+.normalized_constant_alpha <- function(norm, alpha, PA_offset, degree, theta, f, offset_tk, offset) {
+    .Call('PAFit_normalized_constant_alpha', PACKAGE = 'PAFit', norm, alpha, PA_offset, degree, theta, f, offset_tk, offset)
 }
 
 .get_stats <- function(time_stamp, unique_stamp, in_node, out_node, all_node, ok_node, bin_vector, max_node_id, undirected, only_PA, time_vector, Sum_m_k, n_tk, m_tk, m_t, offset_tk, z_j, node_degree, offset_m_tk) {
@@ -25,12 +25,16 @@
     .Call('PAFit_update_offset_alpha', PACKAGE = 'PAFit', alpha, offset_n_tk, offset_m_tk, theta, normalized_const, m_t, shape, rate)
 }
 
-.update_f_alpha <- function(f, non_zero_f, alpha, degree, theta, z_j, normalized_const, m_t, shape, rate) {
-    .Call('PAFit_update_f_alpha', PACKAGE = 'PAFit', f, non_zero_f, alpha, degree, theta, z_j, normalized_const, m_t, shape, rate)
+.update_f_alpha <- function(f, non_zero_f, alpha, PA_offset, degree, theta, z_j, normalized_const, m_t, shape, rate) {
+    .Call('PAFit_update_f_alpha', PACKAGE = 'PAFit', f, non_zero_f, alpha, PA_offset, degree, theta, z_j, normalized_const, m_t, shape, rate)
 }
 
-.update_alpha <- function(non_zero_theta, norm, f, theta, degree, m_t, Sum_m_k, offset_tk, offset) {
-    .Call('PAFit_update_alpha', PACKAGE = 'PAFit', non_zero_theta, norm, f, theta, degree, m_t, Sum_m_k, offset_tk, offset)
+.update_alpha <- function(non_zero_theta, norm, f, PA_offset, theta, degree, m_t, Sum_m_k, offset_tk, offset) {
+    .Call('PAFit_update_alpha', PACKAGE = 'PAFit', non_zero_theta, norm, f, PA_offset, theta, degree, m_t, Sum_m_k, offset_tk, offset)
+}
+
+.update_PA_offset <- function(norm, f, degree, m_t, Sum_m_k, offset_tk) {
+    .Call('PAFit_update_PA_offset', PACKAGE = 'PAFit', norm, f, degree, m_t, Sum_m_k, offset_tk)
 }
 
 .coeff_theta <- function(degree, f, normalized_const, m_t, length_theta) {

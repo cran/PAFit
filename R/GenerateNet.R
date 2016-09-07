@@ -1,6 +1,6 @@
 # function to generate simulated network  2015-3-11 Thong Pham
 GenerateNet<-
-function(N=1000,m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
+function(N = 1000, m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
          offset = 1, rate = 0, 
          shape = 0, mode_f = c("gamma"), num_seed = 2, prob_m = FALSE,
          meanlog = 0, sdlog = 1,
@@ -25,10 +25,10 @@ function(N=1000,m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
     graph <- vector("list", N)
     # Node weights in the BA model. 
     switch(mode_f[1], 
-    gamma ={
+    gamma = {
     # gamma distribution
-      if (shape*rate > 0)
-        fitness <- rgamma(N,rate = rate,shape = shape)
+      if (shape*rate > 0) 
+          fitness <- rgamma(N,rate = rate,shape = shape)
       else fitness <- rep(1,N)},
      log_normal ={
      # log_normal distribution
@@ -40,8 +40,7 @@ function(N=1000,m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
     stop('mode_f must be either "gamma", "log_normal" or "power_law"')
     }
     )
-     
-  
+    names(fitness) <- 1:N
     for (n in 2:num_seed)
          graph[[n]] <- n - 1
     
@@ -62,25 +61,25 @@ function(N=1000,m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
         # at each time_step: save n
         n_old <- n
         if (!is.null(custom_PA)) {
-          A                 <- custom_PA
-          final_A           <- A[length(A)]  
-          temp              <- A[P + 1]
-          #print(temp)
-          temp[is.na(temp)] <- final_A
-          P.sum   <- sum(temp*fitness[1:n_old])
-          node.weights <- temp*fitness[1:n_old]/P.sum  
+            A                 <- custom_PA
+            final_A           <- A[length(A)]  
+            temp              <- A[P + 1]
+           #print(temp)
+            temp[is.na(temp)] <- final_A
+            P.sum             <- sum(temp*fitness[1:n_old])
+            node.weights      <- temp*fitness[1:n_old]/P.sum  
         }
         else
         if (mode[1] == 1) {
-            P.sum   <- sum(P^alpha*fitness[1:n_old])
+            P.sum        <- sum(P^alpha*fitness[1:n_old])
             node.weights <- P^alpha*fitness[1:n_old]/P.sum
         } else if (mode[1] == 2) {
-            temp    <- pmin(P,sat_at)^alpha
-            P.sum   <- sum(temp*fitness[1:n_old])
+            temp         <- pmin(P,sat_at)^alpha
+            P.sum        <- sum(temp*fitness[1:n_old])
             node.weights <- temp*fitness[1:n_old]/P.sum
         } else {
-            temp    <- alpha*(log(P))^beta + 1 
-            P.sum   <- sum(temp*fitness[1:n_old])
+            temp         <- alpha*(log(P))^beta + 1 
+            P.sum        <- sum(temp*fitness[1:n_old])
             node.weights <- temp*fitness[1:n_old]/P.sum
         }
         for (i in 1:multiple_node){
@@ -104,8 +103,8 @@ function(N=1000,m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
                 temp    <- table(nodes)
                 graph[[n+1]]  <- c(graph[[n+1]], nodes)
                 for(i in 1:length(temp)) { 
-                    num_edge  <- as.numeric(temp[i]) 
-                    node_name <- as.numeric(labels(temp[i]))
+                    num_edge            <- as.numeric(temp[i]) 
+                    node_name           <- as.numeric(labels(temp[i]))
                     degree[node_name]   <- degree[node_name] + num_edge # Update degrees.
                 }
             }
@@ -115,6 +114,8 @@ function(N=1000,m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
         P <- degree
         P[degree == 0] <- offset     
     }
+    
+    
     num_of_edge          <- sum(unlist(lapply(graph,function(x) length(as.vector(x)))))
     edge_list            <- matrix(nrow = num_of_edge,ncol = 3,0)
     sum_m                <- 0
@@ -133,7 +134,7 @@ function(N=1000,m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
                 edge_list[(sum_m + 1):(sum_m + m_t),3]   <-  0
                 edge_list[(sum_m + 1):(sum_m + m_t),1]   <-  i
                 edge_list[(sum_m + 1):(sum_m  +  m_t),2] <- temp 
-                sum_m <- sum_m + m_t
+                sum_m                                    <- sum_m + m_t
             }
            i <- i + 1 
            if (i > N) { break_flag = TRUE;break}  
@@ -149,7 +150,7 @@ function(N=1000,m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
                       edge_list[(sum_m + 1):(sum_m + m_t),3]   <-  current_time_step - 1
                       edge_list[(sum_m + 1):(sum_m + m_t),1]   <-  i
                       edge_list[(sum_m + 1):(sum_m  +  m_t),2] <- temp 
-                      sum_m <- sum_m + m_t
+                      sum_m                                    <- sum_m + m_t
                     }
                     i <- i + 1  
                     if (i > N) { break_flag = TRUE;break}  
@@ -164,7 +165,7 @@ function(N=1000,m = 1, mode = c(1,2,3), alpha = 1, beta = 1, sat_at = 100,
                       edge_list[(sum_m + 1):(sum_m + m_t),3]   <-  current_time_step
                       edge_list[(sum_m + 1):(sum_m + m_t),1]   <-  i
                       edge_list[(sum_m + 1):(sum_m  +  m_t),2] <-  temp 
-                      sum_m <- sum_m + m_t
+                      sum_m                                    <- sum_m + m_t
                   }
             i <- i + 1
             if (i > N) { break_flag = TRUE;break}  

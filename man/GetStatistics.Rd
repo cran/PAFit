@@ -30,10 +30,10 @@ Integer. Number of bins. Default value is \eqn{1000}.
 Integer. The degree from which the program start to binning the degree together. Default value is \eqn{0}.
 }
 \item{deg_threshold}{
-Integer. Only the fitnesses of nodes whose number of new edges acquired is not less than \eqn{deg_threshold} will be estimated. The fitnesses of all other nodes are fixed at \eqn{1}. Default value is \eqn{1}.
+Integer. We only estimate the fitnesses of nodes whose number of new edges acquired is at least deg_threshold. The fitnesses of all other nodes are fixed at \eqn{1}. Default value is \eqn{1}.
 }
 \item{CompressMode}{
-Integer. Indicates whether the timeline should be compressed. Default value is \eqn{0}. The value of CompressMode:
+Integer. Indicates whether the timeline should be compressed. The value of CompressMode:
 
 0: No compression
 
@@ -42,12 +42,14 @@ Integer. Indicates whether the timeline should be compressed. Default value is \
 2: Compressed by only starting from the first time-step when \eqn{CompressRatio*100} percentages of the total number of edges (in the final state of the network) had already been added to the network.
 
 3: This mode offers the most flexibility, but requires user to supply the time stamps in \eqn{CustomTime}. Only time stamps in this \eqn{CustomTime} will be used. This mode can be used, for example, when investigating the change of the attachment function or node fitness in different time intervals.
+
+ Default value is \eqn{0}, i.e. no compression.
 }
   \item{CompressRatio}{
-Numeric. Indicates how much we should compress. Default value is \eqn{0.5}.
+Numeric. Indicates how much we should compress if CompressMode is 1 or 2. Default value is \eqn{0.5}.
 }
   \item{CustomTime}{
-Vector. Custom time stamps.Only effective if CompressMode == 3. In that case, only these time stamps are used.
+Vector. Custom time stamps. Only effective if CompressMode == 3. In that case, only these time stamps are used.
 }
 }
 \value{An object of class PAFitData, which is a list. Some important fields are:
@@ -55,16 +57,16 @@ Vector. Custom time stamps.Only effective if CompressMode == 3. In that case, on
 \item{n_tk}{A matrix where the (t,k+1) element is the number of nodes with degree \eqn{k} at time \eqn{t}}
 \item{m_tk}{A matrix where the (t,k+1) element is the number of new edges connect to a degree-\eqn{k} node at time \eqn{t}}
 \item{Sum_m_k}{A vector where the (k+1)-th element is the total number of edges that linked to a degree \eqn{k} node, counting over all time steps}
-\item{node_degree}{A matrix recording the degree of all nodes at each time step}
+\item{node_degree}{A matrix recording the degree of all nodes (that satisty degree_threshold) at each time step}
 \item{m_t}{A vector where the t-th element is the number of new edges at time t}
 \item{z_j}{A vector where the j-th element is the total number of edges that linked to node j}
 \item{N}{Numeric. The number of nodes in the network}
 \item{T}{Numeric. The number of time steps}
 \item{deg.max}{Numeric. The maximum degree in the final network}
 \item{node_id}{A vector contains the id of all nodes}
-\item{final_deg}{A vector contains the final degree of all nodes}
+\item{final_deg}{A vector contains the final degree of all nodes (including those that do not satisfy degree_threshold)}
 \item{deg_thresh}{Numeric. The specified degree threshold.}
-\item{f_position}{Numeric vector. The index in the node_id vector of the nodes we want to estimate (i.e. nodes whose number of new edges acquired is not less \eqn{deg_thresh})}
+\item{f_position}{Numeric vector. The index in the node_id vector of the nodes we want to estimate (i.e. nodes whose number of new edges acquired is at least deg_thresh)}
 \item{start_deg}{Numeric. The degree at which we start binning.}
 \item{begin_deg}{Numeric vector contains the beginning degree of each bin}
 \item{end_deg}{Numeric vector contains the ending degree of each bin}
@@ -82,9 +84,11 @@ Vector. Custom time stamps.Only effective if CompressMode == 3. In that case, on
 Thong Pham \email{thongpham@thongpham.net}
 }
 \references{
-1. Pham, T., Sheridan, P. & Shimodaira, H (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
+1. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
 
-2. Pham T, Sheridan P, Shimodaira H (2015) PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796})
+2. Pham, T., Sheridan, P. & Shimodaira, H. (2015). PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796}).
+
+3. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Joint Estimation of Preferential Attachment and Node Fitness in Growing Complex Networks. Scientific Reports 6, Article number: 32558. doi:10.1038/srep32558   (\url{www.nature.com/articles/srep32558}).
 }
 
 \examples{

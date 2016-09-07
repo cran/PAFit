@@ -4,7 +4,7 @@ data   <- NULL
 stats  <- NULL
 library(PAFit)
 #Repeat the test 5 times 
-for (count in 1)
+for (count in NULL)
 for (prob_m in c("TRUE", "FALSE")[1])
    for (inc in c("TRUE","FALSE")[1])
       for (log in c("TRUE", "FALSE")[1])             
@@ -28,7 +28,7 @@ for (prob_m in c("TRUE", "FALSE")[1])
                             print("Wrong at offset_m_tk")  
                         result <- PAFit(stats, mode_f ="Constant_PA",stop_cond = 10^-3)
                         plot(result,stats,plot = "A")
-                        plot(result,stats,plot = "f")
-                        plot(result,data = stats,true_f = data$fitness,plot = "true_f")
+                        #plot(result,stats,plot = "f")
+                        #plot(result,data = stats,true_f = data$fitness,plot = "true_f")
                   }
     }
