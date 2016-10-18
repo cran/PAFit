@@ -1,4 +1,4 @@
-performCV <- function(cv_data,r = 10^c(-2,-1,0,1,2),s = 10^c(-2,-1,0,1,2), 
+performCV <- function(cv_data,r = 10^c(-2,-1,0,1,2),s = 10^c(-1,0,1,2,3,4), 
                       stop_cond = 10^-7, only_PAFit = TRUE, 
                       silent = FALSE, only_linear = FALSE) { 
   ratio_vec_PAFit   <- r
@@ -125,11 +125,19 @@ performCV <- function(cv_data,r = 10^c(-2,-1,0,1,2),s = 10^c(-2,-1,0,1,2),
       }
   }
   max_id    <- which.max(PAFit_each)[1]
-  r_optimal <- r[max_id %% length(r)]
-  s_optimal <- s[ceiling(max_id / length(s))]
+  r_index   <- max_id %% length(r)
+  if (r_index == 0)
+      r_index == 1
+  s_index   <- ceiling(max_id / length(s))
+  r_optimal <- r[r_index]
+  s_optimal <- s[s_index]
   result    <- list(PAFit_each = PAFit_each, Fit_each_linear = Fit_each_linear, PA_each = PA_each, 
                     Fit_each = Fit_each, alpha_each = alpha_each, r_optimal = r_optimal, s_optimal = s_optimal)
   class(result) <- "CV_Result"
+  if(FALSE == silent) {
+      print(paste0("Optimal r parameter is: ",r_optimal));
+      print(paste0("Optimal s parameter is: ",s_optimal));
+  }
   return(result)
 }
 

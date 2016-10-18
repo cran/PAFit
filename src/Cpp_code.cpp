@@ -81,7 +81,8 @@ int get_stats(CharacterVector    & time_stamp,
               NumericMatrix& offset_tk, 
               NumericVector& z_j, 
               NumericMatrix& node_degree,
-              NumericMatrix& offset_m_tk) {
+              NumericMatrix& offset_m_tk,
+              const int only_true_deg) {
   long N     = all_node.size(); 
   long N_new = ok_node.size();
   long T     = time_vector.size();
@@ -98,6 +99,7 @@ int get_stats(CharacterVector    & time_stamp,
   std::vector<long> z_j_vector(N_new,0);
   std::vector<long> offset_tk_vector(K,0);
   std::vector<long> offset_m_tk_vector(K,0);
+  
   
   for (long i = 0; i < N; ++ i) {
       node_array[all_node(i)] = i; 
@@ -122,65 +124,81 @@ int get_stats(CharacterVector    & time_stamp,
                   }
               }
           }
-          for (long k = 0; k < K; ++k) {
-              n_tk(t - 1,k)          = n_tk_vector.at(k);
-              if (0 == only_PA) {  
-                  offset_tk(t - 1,k)   = offset_tk_vector.at(k);
-                  offset_m_tk(t - 1,k) = offset_m_tk_vector.at(k);  
-                  offset_m_tk_vector.at(k) = 0;
-          }
-      }
+          if (0 == only_true_deg)
+              for (long k = 0; k < K; ++k) {
+                  n_tk(t - 1,k)          = n_tk_vector.at(k);
+                  if (0 == only_PA) {  
+                      offset_tk(t - 1,k)   = offset_tk_vector.at(k);
+                      offset_m_tk(t - 1,k) = offset_m_tk_vector.at(k);  
+                      offset_m_tk_vector.at(k) = 0;
+                  }
+              }
       }    
-      for (long k = 0; k < K; ++k)
-          m_tk_vector.at(k) = 0;
-      if (0 == only_PA)      
-          for (long j = 0; j < N_new; ++j)
-              z_j_vector.at(j) = 0;    
+      if (0 == only_true_deg)
+          for (long k = 0; k < K; ++k)
+              m_tk_vector.at(k) = 0;
       
-  while ((edge_count < in_node.size()) && (time_stamp(edge_count) == time_vector(t))) {
+      if (0 == only_true_deg)
+          if (0 == only_PA)      
+              for (long j = 0; j < N_new; ++j)
+                  z_j_vector.at(j) = 0;    
+      
+      while ((edge_count < in_node.size()) && (time_stamp(edge_count) == time_vector(t))) {
 
-      long in_node_ind  = node_array.at(in_node(edge_count)); 
-      long out_node_ind = node_array.at(out_node(edge_count)); 
-      // consider the in-node first
-      //the in-node has not appeared in the previous time step
-      if (0 == is_appear[in_node_ind]) {
-          //the in-node has not appeared in previous edges of the current time step
-          if (0 == appear_onestep.at(in_node_ind)) { 
-              appear_onestep.at(in_node_ind)  = 1;
-              degree_vector.at(in_node_ind)   = 1;
-              //appear_onestep_in.at(in_node_ind)  = 1;
-              ++n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
-              if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count))))   
-                  ++offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
+          long in_node_ind  = node_array.at(in_node(edge_count)); 
+           long out_node_ind = node_array.at(out_node(edge_count)); 
+          // consider the in-node first
+          //the in-node has not appeared in the previous time step
+          if (0 == is_appear[in_node_ind]) {
+              //the in-node has not appeared in previous edges of the current time step
+              if (0 == appear_onestep.at(in_node_ind)) { 
+                  appear_onestep.at(in_node_ind)  = 1;
+                  degree_vector.at(in_node_ind)   = 1;
+                  //appear_onestep_in.at(in_node_ind)  = 1;
+                  if (0 == only_true_deg)
+                      ++n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
+                  if (0 == only_true_deg)
+                      if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count))))   
+                          ++offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
               
-          }
-          else { //the in-node has already appeared in some edges of the current time step
-              if ((0 == only_PA)&& (0 == ok_array.at(in_node(edge_count))))    
-                  --offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
-              --n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
-              ++degree_vector.at(in_node_ind); 
-              ++n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
-              if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count))))   
-                  ++offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
-          }     
-    } // the in-node is already appeared in the previous time-step
-      else { 
-           if ((0 == only_PA) && (1 == ok_array.at(in_node(edge_count))))
-                   z_j(ok_index.at(in_node(edge_count)))++;
-             
-           ++m_tk_vector.at(bin_vector(degree_vector_onestep.at(in_node_ind))); 
-           if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count))))
-               ++offset_m_tk_vector.at(bin_vector(degree_vector_onestep.at(in_node_ind)));         
-           --n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind)));
-           if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count)))) {                  
-                   -- offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind)));        
-           }
+              }
+              else { //the in-node has already appeared in some edges of the current time step
+                  if (0 == only_true_deg)    
+                      if ((0 == only_PA)&& (0 == ok_array.at(in_node(edge_count))))    
+                          --offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
+                  if (0 == only_true_deg)
+                      --n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
+                  ++degree_vector.at(in_node_ind); 
+                  if (0 == only_true_deg)
+                      ++n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
+                  if (0 == only_true_deg)
+                      if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count))))   
+                          ++offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
+              }     
+        } // the in-node is already appeared in the previous time-step
+        else { 
+            if (0 == only_true_deg)  
+                if ((0 == only_PA) && (1 == ok_array.at(in_node(edge_count))))
+                    z_j(ok_index.at(in_node(edge_count)))++;
+            if (0 == only_true_deg)    
+               ++m_tk_vector.at(bin_vector(degree_vector_onestep.at(in_node_ind))); 
+            if (0 == only_true_deg)
+               if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count))))
+                   ++offset_m_tk_vector.at(bin_vector(degree_vector_onestep.at(in_node_ind)));         
+            if (0 == only_true_deg)
+                --n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind)));
+            if (0 == only_true_deg)
+                if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count)))) {                  
+                    -- offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind)));        
+               }
            ++degree_vector.at(in_node_ind);
-           ++n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
-           if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count)))) {                       
+           if (0 == only_true_deg)      
+               ++n_tk_vector.at(bin_vector(degree_vector.at(in_node_ind))); 
+           if (0 == only_true_deg)
+               if ((0 == only_PA) && (0 == ok_array.at(in_node(edge_count)))) {                       
                    ++offset_tk_vector.at(bin_vector(degree_vector.at(in_node_ind)));    
-          }
-      }
+               }
+        }
       //consider next the Out node
       //the out node has not appeared in the previous time step
       if (0 == is_appear.at(out_node_ind)) {
@@ -188,29 +206,36 @@ int get_stats(CharacterVector    & time_stamp,
           if (1 == undirected) {
               if (0 == appear_onestep.at(out_node_ind)) {
                   degree_vector.at(out_node_ind)   = 1;  
-                   ++n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));  
-                  if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count))))
-                      ++offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));     
-                 
+                   if (0 == only_true_deg) 
+                       ++n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));  
+                   if (0 == only_true_deg)
+                       if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count))))
+                           ++offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));     
               }
               else {
-                  if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) 
-                      --offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind))); 
-                  --n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));    
+                  if (0 == only_true_deg)  
+                      if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) 
+                          --offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind))); 
+                  if (0 == only_true_deg)    
+                      --n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));    
                   degree_vector.at(out_node_ind)   = 1;   
-                  ++n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));   
-                  if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) 
-                      ++offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind))); 
+                  if (0 == only_true_deg)
+                      ++n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));   
+                  if (0 == only_true_deg)
+                      if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) 
+                          ++offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind))); 
               }
           }
           //the network is directed, so this out_node is not counted
           else {
                if (0 == appear_onestep.at(out_node_ind)) { 
                   degree_vector.at(out_node_ind)   = 0; 
-                  ++n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));
-                  if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) {                       
-                      ++offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind))); 
-                  }
+                  if (0 == only_true_deg)
+                      ++n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));
+                  if (0 == only_true_deg)
+                      if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) {                       
+                          ++offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind))); 
+                      }
               }    
           }
           appear_onestep.at(out_node_ind)       = 1;
@@ -219,41 +244,51 @@ int get_stats(CharacterVector    & time_stamp,
       else {
            //the network is undirected, so this out_node is also counted  
           if (1 == undirected) {  
-              if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) {                  
-                  -- offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));        
-              }  
-              if ((0 == only_PA) && (1 == ok_array.at(out_node(edge_count))))
-                  z_j(ok_index.at(out_node(edge_count)))++;
-              ++m_tk_vector.at(bin_vector(degree_vector_onestep.at(out_node_ind))); 
-              if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count))))
-                  ++offset_m_tk_vector.at(bin_vector(degree_vector_onestep.at(out_node_ind)));
-              --n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));
+              if (0 == only_true_deg)  
+                  if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) {                  
+                      -- offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));        
+                  }
+              if (0 == only_true_deg)    
+                  if ((0 == only_PA) && (1 == ok_array.at(out_node(edge_count))))
+                      z_j(ok_index.at(out_node(edge_count)))++;
+              if (0 == only_true_deg)    
+                  ++m_tk_vector.at(bin_vector(degree_vector_onestep.at(out_node_ind))); 
+              if (0 == only_true_deg)
+                  if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count))))
+                      ++offset_m_tk_vector.at(bin_vector(degree_vector_onestep.at(out_node_ind)));
+              if (0 == only_true_deg)    
+                  --n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));
+              
               ++degree_vector.at(out_node_ind);
-              ++n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind))); 
-              if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) {                  
-                  -- offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));        
-              }
+              
+              if (0 == only_true_deg)
+                  ++n_tk_vector.at(bin_vector(degree_vector.at(out_node_ind))); 
+              
+              if (0 == only_true_deg)
+                  if ((0 == only_PA) && (0 == ok_array.at(out_node(edge_count)))) {                  
+                      -- offset_tk_vector.at(bin_vector(degree_vector.at(out_node_ind)));        
+                  }
           }
       }
       ++edge_count; 
      }
-
-  if (t > 0)  {
-      for (long k = 0; k < K; ++k) {
-          m_tk(t - 1,k)     = m_tk_vector.at(k);
-          Sum_m_k(k)       += m_tk_vector.at(k);
-          m_t(t - 1)       += m_tk_vector.at(k);
+  if (0 == only_true_deg)
+      if (t > 0)  {
+          for (long k = 0; k < K; ++k) {
+              m_tk(t - 1,k)     = m_tk_vector.at(k);
+              Sum_m_k(k)       += m_tk_vector.at(k);
+              m_t(t - 1)       += m_tk_vector.at(k);
           
+          }
+          if (0 == only_PA) { 
+              for (long i = 0; i < N_new; ++i) {
+                  z_j(i) += z_j_vector.at(i);
+              } 
+          for (long k = 0; k < K; ++k) {
+              offset_m_tk(t - 1,k) = offset_m_tk_vector.at(k);      
+          }
+          }
       }
-      if (0 == only_PA) { 
-          for (long i = 0; i < N_new; ++i) {
-              z_j(i) += z_j_vector.at(i);
-          } 
-      for (long k = 0; k < K; ++k) {
-          offset_m_tk(t - 1,k) = offset_m_tk_vector.at(k);      
-      }
-      }
-  }
      t++;
     
      for (long n = 0; n < (long) degree_vector.size(); ++n)
@@ -377,7 +412,7 @@ int update_f_alpha(      NumericVector& f,
                  total += m_t.at(i) / normalized_const.at(i) * (PA_offset);   
         }
         if (z_j(non_zero_f(j) - 1) + shape - 1 <= 0)
-            f(non_zero_f(j) - 1) = 1;
+            f(non_zero_f(j) - 1) = 0;
         else 
             f.at(non_zero_f.at(j) - 1) = (z_j.at(non_zero_f.at(j) - 1) + shape - 1)/(total + rate);
   }

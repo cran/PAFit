@@ -6,7 +6,7 @@ function(x,data,true_f = NULL, plot = c("A","f","true_f"), plot_bin = TRUE,
          min_A = NULL, f_min = NULL, 
          f_max = NULL, plot_true_degree = FALSE, 
          label_x = NULL, label_y = NULL,
-         col_interval = "lightsteelblue",...) {
+         col_interval = "lightsteelblue",col_point = "black",...) {
   if (plot_bin == TRUE) {
       x$k <- x$center_k
       x$A <- x$theta
@@ -36,7 +36,7 @@ function(x,data,true_f = NULL, plot = c("A","f","true_f"), plot_bin = TRUE,
       xlim  <- c(min(x$k[non_zero] + 1),max(x$k[non_zero] + 1))
       plot(x$k[non_zero][1] + 1,x$A[non_zero][1],xlab = ifelse(!is.null(label_x),label_x,expression(k + 1)),
            ylab = ifelse(!is.null(label_y),label_y,expression(hat(A)[k])),
-           xlim = xlim, ylim = limit,log = "xy",...)
+           xlim = xlim, ylim = limit,log = "xy",col = col_point, ...)
       #xtick = seq(from = xlim[1], to = xlim[2],5)
       #axis(side = 1, at = xtick, labels = NULL, xlim = xlim, log = "x")
       if (TRUE == confidence) {
@@ -60,7 +60,7 @@ function(x,data,true_f = NULL, plot = c("A","f","true_f"), plot_bin = TRUE,
           #       length = 0,
           #       col = rgb(0,0,0,shade_interval))
       }
-          points(x$k[non_zero] + 1,x$A[non_zero],...)
+          points(x$k[non_zero] + 1,x$A[non_zero], col = col_point,...)
       if (TRUE == line) {
           alpha <- x$alpha
           beta <- x$linear_fit$coefficients[1]

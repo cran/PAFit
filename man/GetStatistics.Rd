@@ -7,30 +7,33 @@ A function to summarize input data into sufficient statistics for estimating the
 \description{
 The function summarizes input data into sufficient statistics for estimating the attachment function and node fitness, together with additional information about the data, such as the total number of nodes, the number of time-steps, the maximum degree, and the final degree of the network, etc. .  It also provides mechanisms to automatically deal with very large datasets by binning the degree, setting a degree threshold, or discarding time-steps. 
 }
-\usage{GetStatistics(data, net_type, only_PA,Binning, G, start_deg, deg_threshold, 
-CompressMode, CompressRatio, CustomTime)
+\usage{GetStatistics(data,net_type = c("directed","undirected"), only_PA = FALSE, 
+                     Binning = TRUE, G = 200, start_deg = 0,  
+                     deg_threshold = 0, CompressMode = c(0,1,2,3), 
+                     CompressRatio = 0.5 , CustomTime = NULL, 
+                     only_true_deg_matrix = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
 Matrix. A 3-column matrix whose each row contains information of one edge in the form (from_node id, to_node id, time_stamp). from_node id is the id of the source node. to_node id is the id of the destination node. time_stamp is the arrival time of the edge. from_node id and to_node id are assumed to be integers starting from \eqn{0}. time_stamp can be either numeric or string. We assume that a smaller time_stamp represents an earlier arrival time.}
 \item{net_type}{
-String. Indicates the type of network. Default value is "directed".
+String. Indicates the type of network. Default value is \eqn{"directed"}.
 }
 \item{only_PA}{
-Logical. Indicates whether the statistics for estimating \eqn{A_k} are summarized (if TRUE, saving memory at the cost of unable to estimate node fitness). Default value is FALSE. 
+Logical. Indicates whether the statistics for estimating \eqn{A_k} are summarized (if TRUE, saving memory at the cost of unable to estimate node fitness). Default value is \eqn{FALSE}. 
 }
 \item{Binning}{
-Logical. Indicates whether the degree should be binned together. Default value is TRUE.
+Logical. Indicates whether the degree should be binned together. Default value is \eqn{TRUE}.
 }
 \item{G}{
-Integer. Number of bins. Default value is \eqn{1000}.
+Integer. Number of bins. Default value is \eqn{200}.
 }
  \item{start_deg}{
 Integer. The degree from which the program start to binning the degree together. Default value is \eqn{0}.
 }
 \item{deg_threshold}{
-Integer. We only estimate the fitnesses of nodes whose number of new edges acquired is at least deg_threshold. The fitnesses of all other nodes are fixed at \eqn{1}. Default value is \eqn{1}.
+Integer. We only estimate the fitnesses of nodes whose number of new edges acquired is at least deg_threshold. The fitnesses of all other nodes are fixed at \eqn{1}. Default value is \eqn{0}.
 }
 \item{CompressMode}{
 Integer. Indicates whether the timeline should be compressed. The value of CompressMode:
@@ -50,6 +53,9 @@ Numeric. Indicates how much we should compress if CompressMode is 1 or 2. Defaul
 }
   \item{CustomTime}{
 Vector. Custom time stamps. Only effective if CompressMode == 3. In that case, only these time stamps are used.
+}
+\item{only_true_deg_matrix}{
+Logical. Return only the true degree matrix (without binning). The motivation for this option is that sometimes we only want to get a degree matrix that summerizes the growth process of the whole network for plotting etc. Default value is \eqn{FALSE}.
 }
 }
 \value{An object of class PAFitData, which is a list. Some important fields are:

@@ -54,7 +54,7 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
     else theta         <- theta/sum(theta)
     #print(theta)
     #if (include_zero == 0)
-    non_zero_f    <- which(data$z_j != 0)
+    non_zero_f    <- which(data$z_j >= 0)
 
     #if (shape <= 1 & rate <= 1)
     #    non_zero_f <- which(data$z_j > 0)
@@ -80,7 +80,7 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
     }
     for (i in 1:data$G) {
       if (data$begin_deg[i] != 0) {
-        #              center_k[i]  <- round((data$begin_deg[i] + data$end_deg[i])/2)  
+        # center_k[i]  <- round((data$begin_deg[i] + data$end_deg[i])/2)  
         #center_k[data$start_deg + i] <- round(data$begin_deg[i]*sqrt((data$begin_deg[i] + data$interval_length[i] - 1)/ data$begin_deg[i]))
         #center_k[data$start_deg + i] <- data$begin_deg[i]
         center_k[data$start_deg + i] <- data$end_deg[i]
@@ -363,7 +363,17 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
         }
         }
         }
-      else {
+      else { # log-linear PA
+        .normalized_constant_alpha(normalized_const, alpha,PA_offset,data$node_degree,theta,f,data$offset_tk,offset)
+        time_non_zero     <- which(normalized_const != 0)
+        log_likelihood <- c(log_likelihood, sum(data$z_j[non_zero_f] * log(f[non_zero_f])) +
+                              alpha * sum(data$Sum_m_k[non_zero_theta] * log(theta[non_zero_theta])) -
+                              sum(data$m_t[time_non_zero] * log(normalized_const[time_non_zero])) + 
+                              ((shape - 1) * (sum(log(f[non_zero_f]))) - rate * sum(f[non_zero_f])) + 
+                              sum(data$offset_m_tk)*log(offset) + (shape - 1) * log(offset) - rate * offset)  
+        log_likelihood[length(log_likelihood)] <- log_likelihood[length(log_likelihood)] + data$Sum_m_k[1] * 
+                                                   log(PA_offset);
+        
           if ((TRUE == debug) && (length(log_likelihood) > 0)){
               print(log_likelihood[length(log_likelihood)])
               if (length(log_likelihood) > 1)
@@ -383,8 +393,9 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
          #print(theta);
          #flush.console();
         # Remember here theta is always the degree sequence,i.e. we need to calculate the power alpha of this deg. seq.    
-         ##################### Update f ######################
-         .normalized_constant_alpha(normalized_const, alpha,PA_offset,data$node_degree,theta,f,data$offset_tk,offset)
+
+          ##################### Update f ######################
+        
          if (FALSE == only_PA)  {
              .update_f_alpha(f,non_zero_f,alpha,PA_offset,data$node_degree,theta,data$z_j,normalized_const,data$m_t,shape,rate)
              # update offset
@@ -396,22 +407,14 @@ PAFit <- function(data, only_PA = FALSE, only_f = FALSE, mode_f = c("Linear_PA",
          alpha     <- .update_alpha(non_zero_theta,
                                     normalized_const,f, PA_offset,
                                     theta,data$node_degree,data$m_t,data$Sum_m_k,data$offset_tk,offset) 
-         .normalized_constant_alpha(normalized_const, alpha,PA_offset, data$node_degree,theta,f,data$offset_tk,offset)
-         PA_offset <- .update_PA_offset(normalized_const,f,data$node_degree,data$m_t,data$Sum_m_k,
-                                         data$offset_tk);
+         #.normalized_constant_alpha(normalized_const, alpha,PA_offset, data$node_degree,theta,f,data$offset_tk,offset)
+         #PA_offset <- .update_PA_offset(normalized_const,f,data$node_degree,data$m_t,data$Sum_m_k,
+         #                                 data$offset_tk);
          #print(alpha)
-         .normalized_constant_alpha(normalized_const, alpha, PA_offset, data$node_degree,theta,f,data$offset_tk,offset)
-          time_non_zero     <- which(normalized_const != 0)
-          log_likelihood <- c(log_likelihood, sum(data$z_j[non_zero_f] * log(f[non_zero_f])) +
-                              alpha * sum(data$Sum_m_k[non_zero_theta] * log(theta[non_zero_theta])) -
-                              sum(data$m_t[time_non_zero] * log(normalized_const[time_non_zero])) + 
-                              ((shape - 1) * (sum(log(f[non_zero_f]))) - rate * sum(f[non_zero_f])) + 
-                              sum(data$offset_m_tk)*log(offset) + (shape - 1) * log(offset) - rate * offset)  
-          log_likelihood[length(log_likelihood)] <- log_likelihood[length(log_likelihood)] + data$Sum_m_k[1] * 
-                                                                                             log(PA_offset);
+         #.normalized_constant_alpha(normalized_const, alpha, PA_offset, data$node_degree,theta,f,data$offset_tk,offset)
           alpha_series <- c(alpha_series,alpha)
       }
-    }
+}
     theta    <- theta^alpha
     if (only_f == TRUE)
         theta[1] <- PA_offset  

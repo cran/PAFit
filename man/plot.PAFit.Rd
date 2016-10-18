@@ -15,7 +15,8 @@ This function plots the estimated attachment function \eqn{A_k} and node fitness
          min_A = NULL, f_min = NULL, 
          f_max = NULL, plot_true_degree = FALSE, 
          label_x = NULL, label_y = NULL,
-         col_interval = "lightsteelblue",...)
+         col_interval = "lightsteelblue",
+         col_point = "black",...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,33 +27,34 @@ An object of class "PAFit", containing the result
 An object of class "PAFitData", containing the summerized statistics.
 }
   \item{true_f}{
-Vector. Optional parameter for the true value of node fitnesses (only available in simulated datasets). If this parameter is specified and plot == "true_f", a plot of estimated \eqn{f} versus true \eqn{f} is produced (after a suitable rescaling of the estimated \eqn{f}).  
+Vector. Optional parameter for the true value of node fitnesses (only available in simulated datasets). If this parameter is specified and plot == "true_f", a plot of estimated \eqn{\eta} versus true \eqn{\eta} is produced (after a suitable rescaling of the estimated \eqn{f}).  
 }
   \item{plot}{
-String. Indicates which plot is produced. Default value is "A".
+String. Indicates which plot is produced.if \eqn{"A"} then PA function is plotted. If \eqn{"f"} then estimated fitness is plotted. If \eqn{"true_f"} then estimated fitness and true fitness are plotted together (require supplement of true fitness). Default value is \eqn{"A"}.
 }
-\item{plot_bin}{Logical. If TRUE then only the center of each bin is plotted. Default is TRUE.}
+\item{plot_bin}{Logical. If TRUE then only the center of each bin is plotted. Default is \eqn{TRUE}.}
 \item{line}{
-Logical. Indicates whether to plot the line fitted from the log-linear model or not. Default value is TRUE.
+Logical. Indicates whether to plot the line fitted from the log-linear model or not. Default value is \eqn{TRUE}.
 }
 \item{confidence}{
 Logical. Indicates whether to plot the confidence intervals of \eqn{A_k} and \eqn{eta_i} or not. If confidence == TRUE, a 2-sigma confidence interval will be plotted at each \eqn{A_k} and \eqn{eta_i}.
 }
 \item{high_deg}{Integer. If this parameter is specified, only nodes whose number of edges acquired is not less than \eqn{high_deg} is plotted.}
 \item{shade_point}{
-Numeric. Value between 0 and 1. This is the transparency level of the points. Default value is 0.5.
+Numeric. Value between 0 and 1. This is the transparency level of the points. Default value is \eqn{0.5}.
 }
 \item{shade_interval}{
-Numeric. Value between 0 and 1. This is the transparency level of the confidence intervals. Default value is 0.5.
+Numeric. Value between 0 and 1. This is the transparency level of the confidence intervals. Default value is \eqn{0.5}.
 }
 \item{max_A}{Numeric. Specify the maximum of the axis of PA.}
 \item{min_A}{Numeric. Specify the minimum of the axis of PA.}
-\item{f_min}{Numeric. Specify the minimum of the axis of f.}
-\item{f_max}{Numeric. Specify the maximum of the axis of f.}
+\item{f_min}{Numeric. Specify the minimum of the axis of fitness.}
+\item{f_max}{Numeric. Specify the maximum of the axis of fitness.}
 \item{plot_true_degree}{Logical. The degree of each node is plotted or not.}
 \item{label_x}{String. The label of x-axis.}
 \item{label_y}{String. The label of y-axis.}
-\item{col_interval}{String. The name of the color of the confidence intervals.}
+\item{col_interval}{String. The name of the color of the confidence intervals. Default value is \eqn{"lightsteelblue"}.}
+\item{col_point}{String. The name of the color of the points. Default value is \eqn{"black"}.}
   \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
 }

@@ -1,6 +1,8 @@
 \name{PAFit-package}
 \alias{PAFit-package}
 \alias{FitMultinomial}
+\alias{calculate_error_PA}
+\alias{calculate_error_fitness}
 \docType{package} 
 \title{A statistical sound method for joint estimation of the attachment function and node fitness in a temporal complex network by maximizing a suitable penalized log-likelihood function}
 \description{
@@ -12,8 +14,8 @@ For a list of references, please run the command: citation("PAFit").
 \tabular{ll}{
 Package: \tab PAFit\cr
 Type: \tab Package\cr
-Version: \tab 0.8.6\cr
-Date: \tab 2016-09-07\cr
+Version: \tab 0.8.7\cr
+Date: \tab 2016-10-18\cr
 License: \tab GPL-3 \cr
 }
 \itemize{

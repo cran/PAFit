@@ -8,7 +8,7 @@ A function to create cross-validation data.
 A function to create cross-validation data.
 }
 \usage{CreateDataCV(data, p = 0.75, G = 50, 
-                        net_type = "directed",deg_thresh = 1)
+                        net_type = "directed",deg_thresh = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,7 +24,7 @@ Integer. Number of bins. Default value is \eqn{50}.
 String. The type of the network: "directed" or "undirected". Default is "directed". 
 }
 \item{deg_thresh}{
-Integer. We only consider nodes with degree at least this threshold. Default value is \eqn{1}.
+Integer. We only consider nodes with degree at least this threshold. Default value is \eqn{0}.
 }
 
 }

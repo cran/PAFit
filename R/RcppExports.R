@@ -9,8 +9,8 @@
     .Call('PAFit_normalized_constant_alpha', PACKAGE = 'PAFit', norm, alpha, PA_offset, degree, theta, f, offset_tk, offset)
 }
 
-.get_stats <- function(time_stamp, unique_stamp, in_node, out_node, all_node, ok_node, bin_vector, max_node_id, undirected, only_PA, time_vector, Sum_m_k, n_tk, m_tk, m_t, offset_tk, z_j, node_degree, offset_m_tk) {
-    .Call('PAFit_get_stats', PACKAGE = 'PAFit', time_stamp, unique_stamp, in_node, out_node, all_node, ok_node, bin_vector, max_node_id, undirected, only_PA, time_vector, Sum_m_k, n_tk, m_tk, m_t, offset_tk, z_j, node_degree, offset_m_tk)
+.get_stats <- function(time_stamp, unique_stamp, in_node, out_node, all_node, ok_node, bin_vector, max_node_id, undirected, only_PA, time_vector, Sum_m_k, n_tk, m_tk, m_t, offset_tk, z_j, node_degree, offset_m_tk, only_true_deg) {
+    .Call('PAFit_get_stats', PACKAGE = 'PAFit', time_stamp, unique_stamp, in_node, out_node, all_node, ok_node, bin_vector, max_node_id, undirected, only_PA, time_vector, Sum_m_k, n_tk, m_tk, m_t, offset_tk, z_j, node_degree, offset_m_tk, only_true_deg)
 }
 
 .update_f <- function(f, non_zero_f, degree, theta, z_j, normalized_const, m_t, shape, rate) {

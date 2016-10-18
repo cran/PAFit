@@ -1,7 +1,8 @@
 # function to summarize statistics from a growing network 
 GetStatistics <-
 function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = TRUE, G = 200, start_deg = 0,  
-         deg_threshold = 0, CompressMode = c(0,1,2,3), CompressRatio = 0.5 , CustomTime = NULL){
+         deg_threshold = 0, CompressMode = c(0,1,2,3), CompressRatio = 0.5 , CustomTime = NULL, 
+         only_true_deg_matrix = FALSE){
 
     
     time_stamp        <- data[,3]
@@ -30,6 +31,8 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
     unique_time       <- sort(unique(time_stamp))
     T                 <- length(unique_time)
     N                 <- length(node_id)
+    if (only_true_deg_matrix == TRUE)
+        Binning <- FALSE  
     ##############  Binning #########################
     #We have to cover from start_deg degree to deg.max degree, that is an interval with length deg.max - start_deg + 1
     if ((TRUE == Binning) && (G > 0) && (G <= deg.max - start_deg + 1)) {
@@ -83,7 +86,7 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
     if (net_type[1] == "directed")
         first_edge       <- table(in_node[time_stamp == unique_time[1]]) else 
     if (net_type[1] == "undirected")
-        first_edge       <- table(data[time_stamp == unique_time[1],1:2])
+        first_edge       <- table(as.vector(as.matrix(data[time_stamp == unique_time[1],1:2])))
        
     first_deg        <- rep(0,N)
     increase         <- rep(0,N)
@@ -109,19 +112,29 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
     
     N_new            <- length(node_id) 
     degree_appear    <- rep(0,deg.max + 1)
-    Sum_m_k          <- rep(0,start_deg + G)
-    n_tk             <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G)
-    m_tk             <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G)
-    m_t              <- rep(0,T_compressed - 1)
-  
-    
+    if (only_true_deg_matrix == TRUE) {
+        Sum_m_k          <- vector() 
+        n_tk             <- matrix(0,0,0)
+        m_tk             <- matrix(0,0,0)
+        m_t              <- vector() 
+    } else {
+        Sum_m_k          <- rep(0,start_deg + G)
+        n_tk             <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G)
+        m_tk             <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G)
+        m_t              <- rep(0,T_compressed - 1)  
+    }
+
     if (FALSE == only_PA) {
-        offset_tk               <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G) 
-        offset_m_tk             <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G) 
-        z_j                     <- rep(0,N_new)
-    
+        if (only_true_deg_matrix == FALSE)  {
+            offset_tk               <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G) 
+            offset_m_tk             <- matrix(0,nrow = T_compressed - 1, ncol = start_deg + G) 
+            z_j                     <- rep(0,N_new)
+        } else {
+          offset_tk               <- matrix(0,0,0)
+          offset_m_tk             <- matrix(0,0,0) 
+          z_j                     <- vector()    
+        }
         node_degree <- matrix(-1,nrow = T_compressed - 1, ncol = N_new) 
-       
     } else {
         offset_tk               <- matrix(0,0,0)
         offset_m_tk             <- matrix(0,0,0) 
@@ -131,27 +144,33 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
     undirected  = 0;
     max_node_id = max(node_id_old);
     only_PA_num = ifelse(only_PA,1,0);
+    only_true_deg_matrix_num = ifelse(only_true_deg_matrix,1,0)
     .get_stats(time_stamp,unique_time,in_node,out_node,node_id_old,node_id,bin_vector, max_node_id, undirected, 
               only_PA_num,              
               compressed_unique_time,
-              Sum_m_k,n_tk,m_tk,m_t,offset_tk,z_j,node_degree,offset_m_tk)
+              Sum_m_k,n_tk,m_tk,m_t,offset_tk,z_j,node_degree,offset_m_tk,only_true_deg_matrix_num)
 
     if (FALSE == only_PA) {
-      names(z_j)            <- node_id
+      if (only_true_deg_matrix == FALSE)   
+          names(z_j)            <- node_id
       colnames(node_degree) <- node_id
     }
    
     names(node_id)    <- node_id
     #now perform the final selection
     true                           <- which(z_j >= deg_threshold)
+    
     if (FALSE == only_PA) {
-        if (length(true) == 0)
-            stop("Degree threshold is too high. Please decrease degree threshold.")  
-        increase[inc >= deg_threshold] <- z_j
-        z_j                            <- z_j[true]
-        f_position                     <- f_position[true]
+        if (only_true_deg_matrix == FALSE) {  
+            if (length(true) == 0)
+                stop("Degree threshold is too high. Please decrease degree threshold.")  
+            increase[inc >= deg_threshold] <- z_j
+            z_j                            <- z_j[true]
+            f_position                     <- f_position[true]
+        }
     }
-    node_degree                    <- node_degree[,true,drop=FALSE]
+    if (only_true_deg_matrix == FALSE) 
+        node_degree                    <- node_degree[,true,drop = FALSE]
     
 
     result  <- list(offset_tk = offset_tk, offset_m_tk = offset_m_tk, net_type = net_type[1], 
@@ -162,7 +181,8 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
                 increase = increase, start_deg = start_deg, 
                 Binning = Binning, G = G, 
                 CompressMode = CompressMode[1], f_position = f_position, compressed_unique_time = compressed_unique_time, begin_deg = begin_deg, end_deg = end_deg,
-                interval_length = interval_length,node_id = node_id_old, N = N, T = T, T_compressed = T_compressed,deg.max = deg.max, CompressRatio = CompressRatio , CustomTime = CustomTime)
+                interval_length = interval_length,node_id = node_id_old, N = N, T = T, T_compressed = T_compressed,
+                deg.max = deg.max, CompressRatio = CompressRatio , CustomTime = CustomTime, only_true_deg_matrix = only_true_deg_matrix)
     class(result) <- "PAFitData"
    
     return(result)

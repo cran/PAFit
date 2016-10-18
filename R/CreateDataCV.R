@@ -1,6 +1,6 @@
 
 CreateDataCV<- function(data, p = 0.75, G = 50, 
-                        net_type = "directed",deg_thresh = 1) {
+                        net_type = "directed",deg_thresh = 0) {
   
   time_stamp        <- data[,3]
   in_node           <- data[,2]
@@ -29,7 +29,7 @@ CreateDataCV<- function(data, p = 0.75, G = 50,
       deg_each                  <- matrix(0,nrow = sum(unique_time > use_time),ncol = length(stats$f_position))
       colnames(deg_each)        <- stats$f_position
       deg_each[1,]              <- deg
-      time_each      <- unique_time[unique_time > use_time]
+      time_each                 <- unique_time[unique_time > use_time]
       for (i in 1:length(time_each)){
           new_links      <- in_node[time_stamp == time_each[i]]
           new_links      <- new_links[appear[as.character(new_links)] == 1]

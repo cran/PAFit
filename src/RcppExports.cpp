@@ -40,8 +40,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_stats
-int get_stats(CharacterVector& time_stamp, CharacterVector& unique_stamp, const NumericVector& in_node, const NumericVector& out_node, const NumericVector& all_node, const NumericVector& ok_node, const NumericVector& bin_vector, const long max_node_id, const int undirected, const int only_PA, CharacterVector& time_vector, NumericVector& Sum_m_k, NumericMatrix& n_tk, NumericVector& m_tk, NumericVector& m_t, NumericMatrix& offset_tk, NumericVector& z_j, NumericMatrix& node_degree, NumericMatrix& offset_m_tk);
-RcppExport SEXP PAFit_get_stats(SEXP time_stampSEXP, SEXP unique_stampSEXP, SEXP in_nodeSEXP, SEXP out_nodeSEXP, SEXP all_nodeSEXP, SEXP ok_nodeSEXP, SEXP bin_vectorSEXP, SEXP max_node_idSEXP, SEXP undirectedSEXP, SEXP only_PASEXP, SEXP time_vectorSEXP, SEXP Sum_m_kSEXP, SEXP n_tkSEXP, SEXP m_tkSEXP, SEXP m_tSEXP, SEXP offset_tkSEXP, SEXP z_jSEXP, SEXP node_degreeSEXP, SEXP offset_m_tkSEXP) {
+int get_stats(CharacterVector& time_stamp, CharacterVector& unique_stamp, const NumericVector& in_node, const NumericVector& out_node, const NumericVector& all_node, const NumericVector& ok_node, const NumericVector& bin_vector, const long max_node_id, const int undirected, const int only_PA, CharacterVector& time_vector, NumericVector& Sum_m_k, NumericMatrix& n_tk, NumericVector& m_tk, NumericVector& m_t, NumericMatrix& offset_tk, NumericVector& z_j, NumericMatrix& node_degree, NumericMatrix& offset_m_tk, const int only_true_deg);
+RcppExport SEXP PAFit_get_stats(SEXP time_stampSEXP, SEXP unique_stampSEXP, SEXP in_nodeSEXP, SEXP out_nodeSEXP, SEXP all_nodeSEXP, SEXP ok_nodeSEXP, SEXP bin_vectorSEXP, SEXP max_node_idSEXP, SEXP undirectedSEXP, SEXP only_PASEXP, SEXP time_vectorSEXP, SEXP Sum_m_kSEXP, SEXP n_tkSEXP, SEXP m_tkSEXP, SEXP m_tSEXP, SEXP offset_tkSEXP, SEXP z_jSEXP, SEXP node_degreeSEXP, SEXP offset_m_tkSEXP, SEXP only_true_degSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -64,7 +64,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector& >::type z_j(z_jSEXP);
     Rcpp::traits::input_parameter< NumericMatrix& >::type node_degree(node_degreeSEXP);
     Rcpp::traits::input_parameter< NumericMatrix& >::type offset_m_tk(offset_m_tkSEXP);
-    __result = Rcpp::wrap(get_stats(time_stamp, unique_stamp, in_node, out_node, all_node, ok_node, bin_vector, max_node_id, undirected, only_PA, time_vector, Sum_m_k, n_tk, m_tk, m_t, offset_tk, z_j, node_degree, offset_m_tk));
+    Rcpp::traits::input_parameter< const int >::type only_true_deg(only_true_degSEXP);
+    __result = Rcpp::wrap(get_stats(time_stamp, unique_stamp, in_node, out_node, all_node, ok_node, bin_vector, max_node_id, undirected, only_PA, time_vector, Sum_m_k, n_tk, m_tk, m_t, offset_tk, z_j, node_degree, offset_m_tk, only_true_deg));
     return __result;
 END_RCPP
 }
