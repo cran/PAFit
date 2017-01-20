@@ -16,7 +16,7 @@ The function summarizes input data into sufficient statistics for estimating the
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
-Matrix. A 3-column matrix whose each row contains information of one edge in the form (from_node id, to_node id, time_stamp). from_node id is the id of the source node. to_node id is the id of the destination node. time_stamp is the arrival time of the edge. from_node id and to_node id are assumed to be integers starting from \eqn{0}. time_stamp can be either numeric or string. We assume that a smaller time_stamp represents an earlier arrival time.}
+Matrix. A 3-column matrix whose each row contains information of one edge in the form (from_node id, to_node id, time_stamp). from_node id is the id of the source node. to_node id is the id of the destination node. time_stamp is the arrival time of the edge. from_node id and to_node id are assumed to be integers starting from \eqn{0}. time_stamp can be either numeric or string. The value of a time-stamp can be arbitrary, but we assume that a smaller time_stamp (regarded so by the \eqn{sort} function in \eqn{R}) represents an earlier arrival time.}
 \item{net_type}{
 String. Indicates the type of network. Default value is \eqn{"directed"}.
 }

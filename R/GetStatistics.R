@@ -4,10 +4,10 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
          deg_threshold = 0, CompressMode = c(0,1,2,3), CompressRatio = 0.5 , CustomTime = NULL, 
          only_true_deg_matrix = FALSE){
 
-    
-    time_stamp        <- data[,3]
-    in_node           <- data[,2]
-    out_node          <- data[,1]
+    data              <- data[order(data[,3], decreasing = FALSE),]
+    time_stamp        <- as.vector(data[,3])
+    in_node           <- as.vector(data[,2])
+    out_node          <- as.vector(data[,1])
     out_node          <- out_node[out_node != -1]
     node_id           <- sort(union(in_node,out_node))
    
@@ -145,6 +145,8 @@ function(data,net_type = c("directed","undirected"), only_PA = FALSE, Binning = 
     max_node_id = max(node_id_old);
     only_PA_num = ifelse(only_PA,1,0);
     only_true_deg_matrix_num = ifelse(only_true_deg_matrix,1,0)
+    #print(time_stamp)
+    #print(unique_time)
     .get_stats(time_stamp,unique_time,in_node,out_node,node_id_old,node_id,bin_vector, max_node_id, undirected, 
               only_PA_num,              
               compressed_unique_time,

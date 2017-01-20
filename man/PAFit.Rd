@@ -12,9 +12,13 @@ PAFit (data, only_PA = FALSE, only_f = FALSE,
        mode_f = c("Linear_PA", "Constant_PA","Log_linear"),
        true_A = NULL, true_f = NULL, s = 1, auto_lambda = TRUE, 
        r = 0.01, lambda = 1, weight_PA_mode = 1, auto_stop = TRUE,
-       stop_cond = 10^-6, iteration = 20, max_iter = 1000, 
-       debug = FALSE, alpha_start = 1, normalized_f = FALSE, 
-       interpolate = TRUE, ...)
+       stop_cond = 10^-9, iteration = 20, max_iter = 2e+05, 
+       debug = FALSE, step_size = 0.5, q = 1,
+       alpha_start = 1, normalized_f = FALSE, 
+       interpolate = TRUE, 
+       mode_reg_A = 2, 
+       start_mode_A = "Log_linear", start_mode_f = "Constant",
+       ...)
 }
 \arguments{
   \item{data}{
@@ -53,17 +57,24 @@ Numeric. The strength of the regularization for PA function. Ignored when auto_l
 Integer. Indicates how the regularization terms for \eqn{A_k} are weighted. If weight_PA_mode == 0, the regularization term for \eqn{A_k} is weighted by the total number of edges connected to degree \eqn{k} nodes. If weight_PA_mode == 1, the regularization terms have uniform weights. Default value is \eqn{0}.
 }
 \item{auto_stop}{Logical. Indicates whether the algorithm stop automatically or not. Default is TRUE}
-\item{stop_cond}{Numeric. If \eqn{auto_stop = TRUE}, the iterative algorithm stops when \eqn{abs(h(ii) - h(ii + 1)) / (abs(h(ii)) + 1) < stop_cond} where \eqn{h(ii)} is the value of the objective function (posterior probability in log-scale) at iteration \eqn{ii}. We recommend to choose stop_cond at most equal to \eqn{10^(- number of digits of h - 2)}, in order to ensure that when the algorithm stops, the increase in posterior probability is less than 1\% of the current posterior probability. Default is \eqn{10^-4}.}
+\item{stop_cond}{Numeric. If \eqn{auto_stop = TRUE}, the iterative algorithm stops when \eqn{abs(h(ii) - h(ii + 1)) / (abs(h(ii)) + 1) < stop_cond} where \eqn{h(ii)} is the value of the objective function (posterior probability in log-scale) at iteration \eqn{ii}. We recommend to choose stop_cond at most equal to \eqn{10^(- number of digits of h - 2)}, in order to ensure that when the algorithm stops, the increase in posterior probability is less than 1\% of the current posterior probability. Default is \eqn{10^-9}.}
 \item{iteration}{
 Numeric. The number of iterations. Ignored if auto_stop == TRUE. Default value is \eqn{20}. 
 }
 \item{max_iter}{
-Numeric. The maximum number of iterations. Regardless of other settings, the algorithm will stop once the number of  iterations reaches this threshold. Default value is \eqn{1000}.
+Numeric. The maximum number of iterations. Regardless of other settings, the algorithm will stop once the number of  iterations reaches this threshold. Default value is \eqn{2e+05}.
 }
 \item{debug}{Logical. if debug == TRUE, the value of the objective function \eqn{h} is printed out at each step. Defaule is FALSE.}
+\item{step_size}{Numeric. A number between (0,1] to indicate the step-size of the quasi-Newton speedup. Ignored (no quasi-Newton speedup) if \eqn{q <= 1}. Defaule is 1.}
+\item{q}{Integer. Indicates numbers of previous steps using in the quasi-Newton speedup. Ignored if \eqn{q <= 1}. Defaule is 0.5.}
 \item{alpha_start}{Numeric. The starting value for alpha when we use the model \eqn{k^\alpha}. Default value is \eqn{1}.}
 \item{normalized_f}{Logical. Indicates whether we should normalize the estimated value of \eqn{f} after estimation. Default value is FALSE.}
 \item{interpolate}{Logical. Indicates whether we should perform interpolation for the missing values of the estimated \eqn{A_k}. The interpolation, if performed, is a linear regression on log-scale. Default value is TRUE.}
+\item{mode_reg_A}{Integer. Indicate which regularization term is used for the PA function. For the regularization function used in the PLOS ONE and SR paper, use 2. Default value is \eqn{2}.}
+\item{start_mode_A}{String. Takes one of two values: "Log_linear" (the initial PA function set to k^alpha_start) or "Random" (the initial function is randomly sampled from a uniform distribution). Default value is "Log_linear".}
+\item{start_mode_f}{String. Takes one of two values: "Constant" (the initial node fitnesses are all set to 1) or "Random" (the initial node fitnesses are randomly sampled from a gamma distribution). Default value is "Constant".}
+
+
 \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
 }

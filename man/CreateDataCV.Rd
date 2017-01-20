@@ -8,7 +8,7 @@ A function to create cross-validation data.
 A function to create cross-validation data.
 }
 \usage{CreateDataCV(data, p = 0.75, G = 50, 
-                        net_type = "directed",deg_thresh = 0)
+                        net_type = "directed",deg_thresh = 0, exclude_end = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,7 +26,8 @@ String. The type of the network: "directed" or "undirected". Default is "directe
 \item{deg_thresh}{
 Integer. We only consider nodes with degree at least this threshold. Default value is \eqn{0}.
 }
-
+\item{exclude_end}{
+Logical. If TRUE, then for the testing data, at each time-step we only consider the new edges that connect to nodes with the current degrees less than \eqn{deg\_max}, which is the maximum degree in the learning data. The motivation for this option is that in the learning phase, we can only learn the PA function up to \eqn{deg_max}, so it makes sense to limit the degree in the testing phase to \eqn{deg\_max}. From our experiences, this option does not matter. Default value is FALSE}.
 }
 
 \value{An object of class "CV_Data" containing the data needed for cross validation.

@@ -63,8 +63,8 @@ function(x,data,true_f = NULL, plot = c("A","f","true_f"), plot_bin = TRUE,
           points(x$k[non_zero] + 1,x$A[non_zero], col = col_point,...)
       if (TRUE == line) {
           alpha <- x$alpha
-          beta <- x$linear_fit$coefficients[1]
-          lines(x$k[non_zero] + 1,exp(beta)*(x$k[non_zero] + 1)^alpha,lwd= 2)
+          beta <-  x$linear_fit$coefficients[1]
+          lines(x$k[non_zero],exp(beta)*(x$k[non_zero])^alpha,lwd= 2)
       }
   }
   else if ("f" == plot[1]) {

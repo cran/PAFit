@@ -1,4 +1,4 @@
-performCV <- function(cv_data,r = 10^c(-2,-1,0,1,2),s = 10^c(-1,0,1,2,3,4), 
+performCV <- function(cv_data,r = 10^c(-2,-1,0,1,2),s = 10^c(-1,1,2,3,4), 
                       stop_cond = 10^-7, only_PAFit = TRUE, 
                       silent = FALSE, only_linear = FALSE) { 
   ratio_vec_PAFit   <- r

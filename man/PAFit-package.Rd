@@ -14,8 +14,8 @@ For a list of references, please run the command: citation("PAFit").
 \tabular{ll}{
 Package: \tab PAFit\cr
 Type: \tab Package\cr
-Version: \tab 0.8.7\cr
-Date: \tab 2016-10-18\cr
+Version: \tab 0.9.3\cr
+Date: \tab 2017-01-20\cr
 License: \tab GPL-3 \cr
 }
 \itemize{

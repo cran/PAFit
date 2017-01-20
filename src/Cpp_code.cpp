@@ -311,7 +311,8 @@ int update_f(      NumericVector& f,
              const NumericVector& normalized_const, 
              const NumericVector& m_t, 
              const double         shape, 
-             const double         rate) {
+             const double         rate,
+             const double         offset) {
     long T        = degree.nrow();        // number of time-steps
     long N_nozero = non_zero_f.size();   // number of nodes
     #pragma omp parallel for
@@ -322,7 +323,7 @@ int update_f(      NumericVector& f,
                 total += m_t(i) / normalized_const(i) * theta(degree(i,non_zero_f(j) - 1));
             }
     if (z_j(non_zero_f(j) - 1) + shape - 1 <= 0)
-        f(non_zero_f(j) - 1) = 1;
+        f(non_zero_f(j) - 1) = offset;
     else 
         f(non_zero_f(j) - 1) = (z_j(non_zero_f(j) - 1) + shape - 1)/(total + rate);
     }
@@ -351,9 +352,13 @@ double update_offset(
       total2 += offset_m_tk(i,k);  
       }
   }
+  //std::cout << "total 2: " << total2 << "; Total 1: \n" << total1 << "\n";
+  //std::cout << "shape: " << shape << "; rate: \n" << rate << "\n";
   if (total2 + shape - 1 > 0)
-      offset = (total2 + shape - 1)/(total1 + rate);
+      offset = (total2 + shape - 1.0)/(total1 + rate);
   //printf("%f ",offset);
+  
+  //std::cout << "offset in C: " << offset << "\n";
   return offset;
 }
 
