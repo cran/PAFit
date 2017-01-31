@@ -1,19 +1,19 @@
-\name{summary.PAFitData}
-\alias{summary.PAFitData}
+\name{summary.PAFit_data}
+\alias{summary.PAFit_data}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-A function to summarize a PAFitData object 
+A function to summarize a PAFit_data object 
 }
 \description{
-This function summarizes information of a PAFitData object. 
+This function summarizes information of a PAFit_data object. 
 }
 \usage{
-\method{summary}{PAFitData}(object,...)
+\method{summary}{PAFit_data}(object,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-An object of class "PAFitData", containing the summary statistics needed in estimation.
+An object of class "PAFit_data", containing the summary statistics needed in estimation.
 }
 \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
@@ -36,7 +36,7 @@ Thong Pham \email{thongpham@thongpham.net}
 
 \examples{
 library("PAFit")
-data   <- GenerateNet(N = 100,m = 1,mode = 1, alpha = 1, shape = 5, rate = 5)
-stats  <- GetStatistics(data$graph)
-summary(stats)
+net        <- GenerateNet(N = 100 , m = 1 , mode = 1 , alpha = 1 , shape = 5 , rate = 5)
+net_stats  <- GetStatistics(net$graph)
+summary(net_stats)
 }

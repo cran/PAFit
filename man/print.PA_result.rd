@@ -1,26 +1,27 @@
-\name{summary.PAFit}
-\alias{summary.PAFit}
+\name{print.PA_result}
+\alias{print.PA_result}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-A function to summarize a PAFit object
+  A function to print a PA_result object
 }
 \description{
-This function summarizes information of a PAFit object. 
+  This function prints a PA_result object's information.
 }
 \usage{
-\method{summary}{PAFit}(object,...)
+\method{print}{PA_result}(x,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{
-An object of class "PAFit", containing the estimation result.
+  \item{x}{
+An object of class "PA_result", containing the estimated preferential attachment from Newman's or Jeong's method.
 }
-\item{\dots}{
+   \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
 }
 }
+
 \value{
-Outputs summary information.
+Outputs some simple information. 
 }
 
 \author{
@@ -36,8 +37,8 @@ Thong Pham \email{thongpham@thongpham.net}
 
 \examples{
 library("PAFit")
-data   <- GenerateNet(N = 100,m = 1,mode = 1, alpha = 1, shape = 5, rate = 5)
-stats  <- GetStatistics(data$graph,deg_thresh = 1, Binning = TRUE, G = 50)
-result <- PAFit(stats,stop_cond = 10^-3)
-summary(result)
+net        <- GenerateNet(N = 50 , m = 10 , mode = 1 , alpha = 1 , shape = 0)
+net_stats  <- GetStatistics(net$graph)
+result     <- Newman_corrected(net_stats)
+print(result)
 }

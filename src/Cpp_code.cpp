@@ -362,33 +362,33 @@ double update_offset(
   return offset;
 }
 
-// [[Rcpp::export(".update_offset_alpha")]]
-double update_offset_alpha( 
-                         const double       & alpha,       
-                         const NumericMatrix& offset_n_tk,
-                         const NumericMatrix& offset_m_tk, 
-                         const NumericVector& theta, 
-                         const NumericVector& normalized_const, 
-                         const NumericVector& m_t, 
-                         const double         shape, 
-                         const double         rate) {
-  long T        = offset_n_tk.nrow();        // number of time-steps
-  long K        = offset_n_tk.ncol();
-  double total1 = 0;
-  double total2 = 0;
-  double offset = 0;
-#pragma omp parallel for reduction(+:total1, total2) 
-  for (long i = 0; i < T; i++) {
-    for (long k = 0; k < K; k++)  
-      if (normalized_const(i) != 0) {
-        total1 += m_t(i) / normalized_const(i) * offset_n_tk(i,k) * pow(theta.at(k),alpha);
-        total2 += offset_m_tk(i,k);  
-      }
-  }
-  offset = (total2 + shape - 1)/(total1 + rate);
-  
-  return offset;
-}
+// // [[Rcpp::export(".update_offset_alpha")]]
+// double update_offset_alpha( 
+//                          const double       & alpha,       
+//                          const NumericMatrix& offset_n_tk,
+//                          const NumericMatrix& offset_m_tk, 
+//                          const NumericVector& theta, 
+//                          const NumericVector& normalized_const, 
+//                          const NumericVector& m_t, 
+//                          const double         shape, 
+//                          const double         rate) {
+//   long T        = offset_n_tk.nrow();        // number of time-steps
+//   long K        = offset_n_tk.ncol();
+//   double total1 = 0;
+//   double total2 = 0;
+//   double offset = 0;
+// #pragma omp parallel for reduction(+:total1, total2) 
+//   for (long i = 0; i < T; i++) {
+//     for (long k = 0; k < K; k++)  
+//       if (normalized_const(i) != 0) {
+//         total1 += m_t(i) / normalized_const(i) * offset_n_tk(i,k) * pow(theta.at(k),alpha);
+//         total2 += offset_m_tk(i,k);  
+//       }
+//   }
+//   offset = (total2 + shape - 1)/(total1 + rate);
+//   
+//   return offset;
+// }
 
 
 // [[Rcpp::export(".update_f_alpha")]]
@@ -417,7 +417,7 @@ int update_f_alpha(      NumericVector& f,
                  total += m_t.at(i) / normalized_const.at(i) * (PA_offset);   
         }
         if (z_j(non_zero_f(j) - 1) + shape - 1 <= 0)
-            f(non_zero_f(j) - 1) = 0;
+            f(non_zero_f(j) - 1) = 1;
         else 
             f.at(non_zero_f.at(j) - 1) = (z_j.at(non_zero_f.at(j) - 1) + shape - 1)/(total + rate);
   }
@@ -438,69 +438,72 @@ double update_alpha(
                  const double&        offset
 ) {
   long T = degree.nrow();     // number of time-steps
-  long N = degree.ncol();     // number of nodes
+  long N  = degree.ncol();     // number of nodes
+  //long N2 = f.size();
+  
+  // printf("%d",N);
+  // printf("%d",N2);
+   
   long K = offset_tk.ncol();  // maximum degree 
-  long length_theta = theta.size();
-  NumericVector f_sum(length_theta);
+  //long length_theta = theta.size();
 
-  for (long t = 0; t < T; t++) 
-      for (long i = 0; i < N; ++i) {
-      if ((degree(t,i) > 0) && (norm(t) != 0)){
-        f_sum.at(degree(t,i)) += m_t.at(t)*f.at(i)/norm.at(t);
-      }
-  }
-  for (long t = 0; t < T; t++) 
-      for (long k = 0; k < K; ++k) {
-          if ((degree(t,k) > 0) && (norm(t) != 0) ){
-              f_sum.at(k) += offset_tk(t,k) * m_t.at(t) * offset/norm.at(t);
-          }
-  }
-
- 
   auto f_1 = [&](double x) {
-      double temp = 0;
+      double temp   = 0;
       double first  = 0;
-    for(long k = 0; k <Sum_m_k.size(); ++k)
-      for (long k = 0; k < non_zero_theta.size(); ++k) {
-          temp += log(theta.at(non_zero_theta.at(k) - 1)) * pow(theta.at(non_zero_theta.at(k) - 1),x) *
-              f_sum.at(non_zero_theta.at(k) - 1);
-          if (theta.at(non_zero_theta.at(k) - 1) > 0)
-          first += Sum_m_k.at(k) * log(theta.at(non_zero_theta.at(k) - 1)) * pow(theta.at(non_zero_theta.at(k) - 1),x) / 
-                   (pow(theta.at(non_zero_theta.at(k) - 1),x));  
+      for(long k = 0; k < Sum_m_k.size(); ++k)
+          if (theta.at(k) > 0)
+              first += Sum_m_k.at(k) * log(theta.at(k)); 
+      
+      for (long t = 0; t < T; t++) {
+          double norm  = 0;
+          double upper = 0;
+          for (long i = 0; i < N; ++i)
+              if (degree(t,i) >= 0 && (theta.at(degree(t,i)) > 0))  {
+                  norm  += f.at(i) * pow(theta.at(degree(t,i)),x);
+                  upper += pow(theta.at(degree(t,i)),x) * log(theta.at(degree(t,i))) * f.at(i); 
+          }
+          // offset
+          for (long k = 0; k < K; ++k)
+              if (theta.at(k) > 0)  {
+                  norm  += offset_tk(t,k) * pow(theta.at(k),x);  
+                  upper += pow(theta.at(k),x) * log(theta.at(k)) *
+                           offset_tk(t,k);
+          }
+          if (norm > 0)
+              temp -= upper / norm * m_t.at(t);
       }
-      return(first - temp);};
+      return(first + temp); };
   double alpha = my_zeroin(0,2,f_1,DBL_EPSILON,500);    
   //printf("alpha inside C: %f\n",alpha);    
   return alpha;
 }
 
 
-// [[Rcpp::export(".update_PA_offset")]]
-double update_PA_offset(
-    const NumericVector& norm,
-    const NumericVector& f, 
-    const NumericMatrix& degree, 
-    const NumericVector& m_t,
-    const NumericVector& Sum_m_k,
-    const NumericMatrix& offset_tk) {
-  long T = degree.nrow();     // number of time-steps
-  long N = degree.ncol();     // number of nodes
- //long K = offset_tk.ncol();  // maximum degree 
-  double second_temp = 0;
-  
-  for (long t = 0; t < T; t++) 
-    for (long i = 0; i < N; ++i) {
-      if ((degree(t,i) == 0) && (norm(t) != 0)){
-        second_temp += m_t.at(t)*f.at(i)/norm.at(t);
-      }
-    }
-  for (long t = 0; t < T; t++) 
-      second_temp += offset_tk(t,0) * m_t.at(t) /norm.at(t);
-  
-  double result = Sum_m_k.at(0) * 1.0 / second_temp;
-  return result;
-
-}
+// // [[Rcpp::export(".update_PA_offset")]]
+// double update_PA_offset(
+//     const NumericVector& norm,
+//     const NumericVector& f, 
+//     const NumericMatrix& degree, 
+//     const NumericVector& m_t,
+//     const NumericVector& Sum_m_k,
+//     const NumericMatrix& offset_tk) {
+//   long T = degree.nrow();     // number of time-steps
+//   long N = degree.ncol();     // number of nodes
+//  //long K = offset_tk.ncol();  // maximum degree 
+//   double second_temp = 0;
+//   
+//   for (long t = 0; t < T; t++) 
+//     for (long i = 0; i < N; ++i) {
+//       if ((degree(t,i) == 0) && (norm(t) != 0)){
+//         second_temp += m_t.at(t)*f.at(i)/norm.at(t);
+//       }
+//     }
+//   for (long t = 0; t < T; t++) 
+//       second_temp += offset_tk(t,0) * m_t.at(t) /norm.at(t);
+//   
+//   double result = Sum_m_k.at(0) * 1.0 / second_temp;
+//   return result;
+// }
 
 // [[Rcpp::export(".coeff_theta")]]
 NumericVector coeff_theta( const NumericMatrix& degree,  
