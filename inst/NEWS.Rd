@@ -2,6 +2,27 @@
 \alias{NEWS}
 \title{Package News}
 
+\section{version 0.9.7.5 (Release date: 2017-02-15)}{
+  \subsection{FIXED}{
+    \itemize{
+    \item{a bug in plotting the PA function when the degree threshold is set too high} 
+    }
+  }
+    \subsection{CHANGED}{
+    \itemize{
+      \item{improved the exposition in the documentation}
+      \item{improved code readability}
+    }
+  }
+  \subsection{NEW}{
+    \itemize{
+    \item wrapper functions to generate networks from well-known models 
+    \item complete overhaul of the main functions. 
+    }
+  }
+}
+
+
 \section{version 0.9.6 (Release date: 2017-02-02)}{
   \subsection{FIXED}{
     \itemize{

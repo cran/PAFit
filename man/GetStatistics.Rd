@@ -1,5 +1,6 @@
 \name{GetStatistics}
 \alias{GetStatistics}
+\alias{PAFit_data}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Getting summarized statistics from input data  
@@ -10,16 +11,17 @@ The function summarizes input data into sufficient statistics for estimating the
 \usage{
 GetStatistics(net ,
               net_type             = "directed" , only_PA       = FALSE , 
-              only_true_deg_matrix = FALSE,
+              only_true_deg_matrix = FALSE      ,
               Binning              = TRUE       , G             = 50    , 
-              start_deg            = 0,  
-              deg_threshold        = 5          , 
+              deg_threshold        = 0          , 
               CompressMode         = 0          , CompressRatio = 0.5   , 
               CustomTime           = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+
 The parameters can be divided into four groups. The first group specifies input data and how the data will be summerized:
+
   \item{net}{
 A three-column matrix whose each row contains information of one edge in the form \code{(from_node id, to_node id, time_stamp)}. \code{from_node id} is the id of the source node. \code{to_node id} is the id of the destination node. \code{time_stamp} is the arrival time of the edge. \code{from_node id} and \code{to_node id} are assumed to be integers starting from \eqn{0}. \code{time_stamp} can be either numeric or string. The value of a time-stamp can be arbitrary, but we assume that a smaller time_stamp (regarded so by the \code{sort} function in \code{R}) represents an earlier arrival time.}
 \item{net_type}{
@@ -37,9 +39,6 @@ Logical. Indicates whether the degree should be binned together. Default value i
 }
 \item{G}{
 Positive integer. Number of bins. Default value is \code{50}.
-}
- \item{start_deg}{
-Integer. The degree from which the program start to binning the degree together. Default value is \code{0}.
 }
 Third group contains a single parameter specifying how to reduce the number of node fitnesses:
 \item{deg_threshold}{
@@ -97,13 +96,12 @@ Vector. Custom time stamps. This vector is a subset of the vector that contains 
 \author{
 Thong Pham \email{thongpham@thongpham.net}
 }
-\references{
-1. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
+\seealso{
 
-2. Pham, T., Sheridan, P. & Shimodaira, H. (2015). PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796}).
-
-3. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Joint Estimation of Preferential Attachment and Node Fitness in Growing Complex Networks. Scientific Reports 6, Article number: 32558. doi:10.1038/srep32558   (\url{www.nature.com/articles/srep32558}).
+For the next step, see \code{\link{Newman}}, \code{\link{Jeong}} or \code{\link{OnlyA_Estimate}} for estimating the attachment function in isolation, \code{\link{OnlyF_Estimate}} for estimating node fitnesses in isolation, and \code{\link{JointEstimate}} for joint estimation of the attachment function and node fitnesses.
 }
+
+
 
 \examples{
 library("PAFit")
@@ -112,8 +110,4 @@ net_stats  <- GetStatistics(net$graph)
 summary(net_stats)
 }
 
-\keyword{fitness model}
-\keyword{Preferential Attachment function}
-\keyword{Minorize-Maximization algorithms}
-\keyword{Bianconi-Barabasi model}
-\keyword{Barabasi-Albert model}
+\concept{temporal complex networks}

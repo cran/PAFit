@@ -4,30 +4,32 @@
 \title{
 Simulating networks from preferential attachment and fitness mechanisms}
 \description{
-This function generates networks from the General Temporal model, a generative temporal network model that includes many well-known models such as the Barabasi-Albert model or the fitness model as special cases. The number of edges of the new node at each time-step can be specified to be fixed, or followed a Poisson distribution.  In the latter case, the mean of the Poisson distribution is either held fixed or increased with time.
+This function generates networks from the General Temporal model, a generative temporal network model that includes many well-known models such as the \enc{Erdős–Rényi}{Erdos-Renyi} model, the \enc{Barabási}{Barabasi}-Albert model or the Bianconi-\enc{Barabási}{Barabasi} model as special cases. This function also includes some flexible mechanisms to vary the number of new nodes and new edges at each time-step in order to generate realistic networks. 
 }
 \usage{
 GenerateNet (N, 
-             num_seed       = 2      , 
-             multiple_node  = 1      , 
-             specific_start = NULL   ,
-             m              = 1      ,
-             prob_m         = FALSE  ,
-             increase       = FALSE  , 
-             log            = FALSE  , 
-             custom_PA      = NULL   ,
-             mode           = 1      , 
-             alpha          = 1      , 
-             beta           = 2      , 
-             sat_at         = 100    ,
-             offset         = 1      ,
-             mode_f         = "gamma", 
-             rate           = 0      , 
-             shape          = 0      , 
-             meanlog        = 0      , 
-             sdlog          = 1      ,
-             scale_pareto   = 2      ,
-             shape_pareto   = 2      )
+             num_seed        = 2      , 
+             multiple_node   = 1      , 
+             specific_start  = NULL   ,
+             m               = 1      ,
+             prob_m          = FALSE  ,
+             increase        = FALSE  , 
+             log             = FALSE  , 
+             noNewNodeStep   = NULL   ,
+             m_noNewNodeStep = m      ,
+             custom_PA       = NULL   ,
+             mode            = 1      , 
+             alpha           = 1      , 
+             beta            = 2      , 
+             sat_at          = 100    ,
+             offset          = 1      ,
+             mode_f          = "gamma", 
+             rate            = 0      , 
+             shape           = 0      , 
+             meanlog         = 0      , 
+             sdlog           = 1      ,
+             scale_pareto    = 2      ,
+             shape_pareto    = 2      )
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -60,21 +62,29 @@ Logical. Indicates whether we increase the mean of the Poisson distribution over
 \item{log}{
 Logical. Indicates how to increase the mean of the Poisson distribution. If \code{log == TRUE}, the mean increases logarithmically with the number of current nodes. If \code{log == FALSE}, the mean increases linearly with the number of current nodes. Default value is \code{FALSE}.
 }
+\item{noNewNodeStep}{
+Positive integer. The number of time-steps in which no new node is added, while new edges are added between existing nodes. Default value is \code{NULL}, i.e. new nodes are added at each time-step.
+}
+\item{m_noNewNodeStep}{
+Positive integer. The number of new edges in the no-new-node steps. Default value is equal to \code{m}. 
+}
+
+
 The third group of parameters specifies the preferential attachment function:
 \item{custom_PA}{
-Numeric vector. This is the user-input PA function: \eqn{A_0,\ A_1,\cdots,\ A_K}. If \code{custom_PA} is specified, then \code{mode} is ignored, and the PA function \code{custom_PA} is used to grow the network. Degree greater than \eqn{K} will have attachment value \eqn{A_k}. Default value is \code{NULL}.
+Numeric vector. This is the user-input PA function: \eqn{A_0, A_1,..., A_K}. If \code{custom_PA} is specified, then \code{mode} is ignored, and we grow the network using the PA function \code{custom_PA}. Degree greater than \eqn{K} will have attachment value \eqn{A_k}. Default value is \code{NULL}.
 }
 \item{mode}{
-Integer. Indicates the attachment function to be used in generating the network. If \code{mode == 1}, the attachment function is \eqn{A_k = k^\alpha}. If \code{mode == 2}, the attachment function is \eqn{A_k = min(k,sat_at)^\alpha}. If \code{mode == 3}, the attachment function is \eqn{A_k = \alpha log (k)^\beta}. Default value is \code{1}.
+Integer. Indicates the attachment function to be used in generating the network. If \code{mode == 1}, the attachment function is \eqn{A_k = k^\alpha}. If \code{mode == 2}, the attachment function is \eqn{A_k = min(k,sat.at)^\alpha}. If \code{mode == 3}, the attachment function is \eqn{A_k = \alpha log (k)^\beta}. Default value is \code{1}.
 } 
   \item{alpha}{
-Numeric. If \code{mode == 1}, this is the attachment exponent in the attachment function \eqn{A_k = k^\alpha}. If \code{mode == 2}, this is the attachment exponenet in the attachment function \eqn{A_k = min(k,sat_at)^\alpha}. If \code{mode == 3}, this is the \eqn{\alpha} in the attachment function \eqn{A_k = \alpha log (k)^\beta + 1}.
+Numeric. If \code{mode == 1}, this is the attachment exponent in the attachment function \eqn{A_k = k^\alpha}. If \code{mode == 2}, this is the attachment exponenet in the attachment function \eqn{A_k = min(k,sat.at)^\alpha}. If \code{mode == 3}, this is the \eqn{\alpha} in the attachment function \eqn{A_k = \alpha log (k)^\beta + 1}.
 }
 \item{beta}{
 Numeric. This is the beta in the attachment function \eqn{A_k = \alpha log (k)^\beta + 1}.
 }
 \item{sat_at}{
-Integer. This is the saturation position sat_at in the attachment function \eqn{A_k = min(k,sat_at)^\alpha}.
+Integer. This is the saturation position \eqn{sat.at} in the attachment function \eqn{A_k = min(k,sat.at)^\alpha}.
 }
 
 \item{offset}{
@@ -97,10 +107,10 @@ Numeric. Mean of the log-normal distribution in log scale. Default value is \cod
 Positive numeric. Standard deviation of the log-normal distribution in log scale. Default value is \code{1}.
 }
 \item{scale_pareto}{
-Numeric. The scale parameter of the Pareto distribution. Default value is \code{0.6}.
+Numeric. The scale parameter of the Pareto distribution. Default value is \code{2}.
 }
 \item{shape_pareto}{
-Numeric. The shape parameter of the Pareto distribution. Default value is \code{2.5}.
+Numeric. The shape parameter of the Pareto distribution. Default value is \code{2}.
 }
 }
 
@@ -112,13 +122,10 @@ The output is a List contains the following two fields:
 \author{
 Thong Pham \email{thongpham@thongpham.net}
 }
-\references{
-1. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Nonparametric Estimation of the Preferential Attachment Function in Complex Networks: Evidence of Deviations from Log Linearity, Proceedings of ECCS 2014, 141-153 (Springer International Publishing) (\url{http://dx.doi.org/10.1007/978-3-319-29228-1_13}).
+\seealso{
+For subsequent estimation procedures, see \code{\link{GetStatistics}}.
 
-2. Pham, T., Sheridan, P. & Shimodaira, H. (2015). PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796}).
-
-3. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Joint Estimation of Preferential Attachment and Node Fitness in Growing Complex Networks. Scientific Reports 6, Article number: 32558. doi:10.1038/srep32558   (\url{www.nature.com/articles/srep32558}).
-}
+For simpler functions to generate networks from well-known models, see \code{\link{Generate_BA}}, \code{\link{Generate_ER}}, \code{\link{Generate_BB}} and \code{\link{Generate_fitonly}}. }
 
 \examples{
 library("PAFit")
@@ -127,10 +134,6 @@ net <- GenerateNet(N = 100,m = 1,mode = 1, alpha = 1, shape = 0)
 str(net)
 }
 
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{scale free}
-\keyword{BA network}
-\keyword{preferential attachment}
-\keyword{Bianconi-Barabasi model}
-\keyword{ fitness model }% __ONLY ONE__ keyword per line
+\concept{fitness model}
+\concept{\enc{Barabási}{Barabasi}-Albert model}
+\concept{Bianconi-\enc{Barabási}{Barabasi} model}
