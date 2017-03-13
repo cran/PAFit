@@ -2,7 +2,7 @@ Package: PAFit
 Type: Package
 Title: Modelling and Inferencing Attachment Mechanisms of Temporal
         Complex Networks
-Version: 0.9.8.2
+Version: 0.9.8.3
 Date: 2017-03-09
 Author: Thong Pham, Paul Sheridan, Hidetoshi Shimodaira
 Maintainer: Thong Pham <thongpham@thongpham.net>
@@ -19,6 +19,6 @@ Encoding: UTF-8
 NeedsCompilation: yes
 Suggests: R.rsp
 VignetteBuilder: R.rsp
-Packaged: 2017-03-10 07:45:49 UTC; thethong
+Packaged: 2017-03-12 10:59:20 UTC; thethong
 Repository: CRAN
-Date/Publication: 2017-03-10 11:49:48
+Date/Publication: 2017-03-13 11:46:50

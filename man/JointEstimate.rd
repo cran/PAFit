@@ -17,6 +17,8 @@ JointEstimate(raw_net             ,
               cv_deg_thresh = c(1,10)  ,
               normal_start_f = FALSE   ,
               weight_f       = 1       ,
+              deg_thresh     = net_stat$deg_thresh,
+              p              = 0.75               ,
               ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -36,9 +38,11 @@ JointEstimate(raw_net             ,
 }
 }
 \item{print.out}{Logical. Indicated whether to print out middle results of the cross-validation process or not. Default value is \code{FALSE}.}
-\item{cv_deg_thresh}{Integer. Default valus is \code{0}.}
+\item{cv_deg_thresh}{Integer. Default value is \code{0}.}
 \item{normal_start_f}{Logical. Default value is \code{FALSE}.}
-\item{weight_f}{Numeric. Default valus is \code{1}.}
+\item{weight_f}{Numeric. Default value is \code{1}.}
+\item{deg_thresh}{Numeric. Default value is \code{net_stat$deg_thresh}.}
+\item{p}{Numeric. Default value is \code{p}.}
 \item{...}{Other parameters to pass to the internal estimation algorithm.}
 }
 

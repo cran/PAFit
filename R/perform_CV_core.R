@@ -10,7 +10,7 @@
   
   FitMultinomial         <- function(true,dat){
     true[true == 0] <- 1
-    return(sum(dat*log(true)))
+    return(sum(dat*log10(true)))
   }
  
   

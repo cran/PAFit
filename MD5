@@ -1,4 +1,4 @@
-a4ec6efa7b62827ee4d0ea9854381844 *DESCRIPTION
+bea81743ef2467d99fea8a38f14a3818 *DESCRIPTION
 5a94302c6b23be5e6b04fddae363ed98 *NAMESPACE
 1048c0deaa75dce5d3acde60c4adbb6b *R/CreateDataCV.R
 2e15bfa71ee17a9c23e150540a9b2f4e *R/CreateDataCV_new.R
@@ -10,7 +10,7 @@ ea8207ac19b97fc301e5c327fc398b8d *R/Generate_ER.R
 4f8ef61dbd3dcd745a4800a20dc15d4f *R/Generate_fitonly.R
 a8cca2eb4c8d2e9522617e1c75a97631 *R/GetStatistics.R
 3c4bdc251c6d54cb60c750b679725888 *R/Jeong.R
-7626223d755b1e93601235c2b5cf0df4 *R/JointEstimate.R
+bb92ea561283cac53c216a9db50b429c *R/JointEstimate.R
 a79685611c219f24d8da3e9464fc20e5 *R/Newman.R
 a64788728a7ee89ec05db7f5fa31dbd0 *R/OnlyA_CV.R
 2a5377aca30f647dfd0ddf16f97f22f1 *R/OnlyA_Estimate.R
@@ -19,7 +19,7 @@ abf396b031fcf63f028004ea0212b660 *R/OnlyF_Estimate.R
 da7c567a6c0f25bd7b33f26f1181de45 *R/PAFit.R
 b753c88a8606b19c91442967c43210fc *R/RcppExports.R
 eddb4da70054837bed4f43fbed374d05 *R/performCV_old.R
-02071af062d3a6e3b92e7916b53da5df *R/perform_CV_core.R
+d131ad5b5fc49eee670fcab454118a57 *R/perform_CV_core.R
 d2db1af725ed7fcdda006fe0ada957a1 *R/plot.pa_result.R
 8982421d09c3c41c034d34211354021e *R/plot.pafit_result.r
 b74220f09344b64da8011cb5d39581eb *R/print.CV_Result.R
@@ -49,20 +49,20 @@ db3320b214746544701b86a49dbdeb78 *man/Generate_ER.rd
 6a05e9860c944e4279c7b3530a9336ab *man/Generate_fitonly.rd
 8c41c8252f3b0a9574d8a64e881c3144 *man/GetStatistics.Rd
 7b2000d48088b4a401d313b4712961e5 *man/Jeong.rd
-1c41a06f302cc3b233f25f66ce70f923 *man/JointEstimate.rd
+d593960ea555bae0ff377b69b670a2a2 *man/JointEstimate.rd
 70317cc30afb50a81f0cfe6244aa4fdc *man/Newman.rd
 ef61b572563f1112741969d23902170d *man/OnlyA_Estimate.rd
 fcf9fb592766f857f4dd8fd62dc5405b *man/OnlyF_Estimate.rd
 60e3b0b7f1cb0d67eedd50f1dd3e849b *man/PAFit-package.Rd
 a099172229a7b8b828a3035f9b74412f *man/plot.PAFit_result.Rd
 561dfebff6beb581d030c898cbaa7535 *man/plot.PA_result.rd
-dd0c61fc6ac3d8c3da5d65694b4a9861 *src/Cpp_code.cpp
+2cb4e102ad354ca4459a666f9612bfab *src/Cpp_code.cpp
 5d2ae7e54ccd755afe2c0b5bae7bce84 *src/Makevars
 5d2ae7e54ccd755afe2c0b5bae7bce84 *src/Makevars.win
 e13ea88cd8ca1c49a3cd89372420db4a *src/RcppExports.cpp
 57d9b2eac9ca77a2d7338737a211955d *src/init.c
 65a23b1e1c1407c8b14bb4b732ec63d1 *tests/loop_PAFit.R
-a8f39cc8b8894fcccf227e807b1adc56 *tests/loop_joint_estimate.R
+f9b602b001b5f7bac2e231680cd78a1a *tests/loop_joint_estimate.R
 50d3f6c6589d449b03a3e42a75df1274 *tests/loop_overall.R
 d8f11b7e9734d6450c8b6f608fe97ab6 *tests/loop_test_Newman_Kong.R
 57d7196bc8d55b146ad84fb327446284 *tests/test_GenerateNet_final_padding.R

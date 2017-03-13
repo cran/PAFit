@@ -201,7 +201,7 @@ int get_stats(CharacterVector    & time_stamp,
                   if (0 == is_in_bin.at(degree_vector_onestep.at(in_node_ind))) {
                       is_in_bin.at(degree_vector_onestep.at(in_node_ind)) = 1;
                       if (degree_vector_onestep.at(in_node_ind) > 0) {
-                          center_bin.at(bin_vector(degree_vector_onestep.at(in_node_ind))) += log10(degree_vector_onestep.at(in_node_ind));
+                          center_bin.at(bin_vector(degree_vector_onestep.at(in_node_ind))) += log10((double) degree_vector_onestep.at(in_node_ind));
                           count_bin.at(bin_vector(degree_vector_onestep.at(in_node_ind)))  += 1;
                       }
                   }
@@ -212,7 +212,7 @@ int get_stats(CharacterVector    & time_stamp,
                    if (0 == is_in_bin.at(degree_vector_onestep.at(in_node_ind))) {
                        is_in_bin.at(degree_vector_onestep.at(in_node_ind)) = 1;
                        if (degree_vector_onestep.at(in_node_ind) > 0) {
-                           center_bin.at(bin_vector(degree_vector_onestep.at(in_node_ind))) += log10(degree_vector_onestep.at(in_node_ind));
+                           center_bin.at(bin_vector(degree_vector_onestep.at(in_node_ind))) += log10( (double) degree_vector_onestep.at(in_node_ind));
                            count_bin.at(bin_vector(degree_vector_onestep.at(in_node_ind)))  += 1;
                        }
                  }
@@ -291,7 +291,7 @@ int get_stats(CharacterVector    & time_stamp,
                   if (0 == is_in_bin.at(degree_vector_onestep.at(out_node_ind))) {
                       is_in_bin.at(degree_vector_onestep.at(out_node_ind)) = 1;
                       if (degree_vector_onestep.at(out_node_ind) > 0) {
-                          center_bin.at(bin_vector(degree_vector_onestep.at(out_node_ind))) += log10(degree_vector_onestep.at(out_node_ind));
+                          center_bin.at(bin_vector(degree_vector_onestep.at(out_node_ind))) += log10((double) degree_vector_onestep.at(out_node_ind));
                           count_bin.at(bin_vector(degree_vector_onestep.at(out_node_ind)))  += 1;
                       }
                 }
@@ -302,7 +302,7 @@ int get_stats(CharacterVector    & time_stamp,
                       if (0 == is_in_bin.at(degree_vector_onestep.at(out_node_ind))) {
                           is_in_bin.at(degree_vector_onestep.at(out_node_ind)) = 1;
                           if (degree_vector_onestep.at(out_node_ind) > 0) {
-                              center_bin.at(bin_vector(degree_vector_onestep.at(out_node_ind))) += log10(degree_vector_onestep.at(out_node_ind));
+                              center_bin.at(bin_vector(degree_vector_onestep.at(out_node_ind))) += log10((double) degree_vector_onestep.at(out_node_ind));
                               count_bin.at(bin_vector(degree_vector_onestep.at(out_node_ind)))  += 1;
                       }
                     }
@@ -649,8 +649,8 @@ double var_alpha(
       for (long i = 0; i < N; ++i)
           if (degree(t,i) >= 0 && (theta.at(degree(t,i)) > 0))  {
               norm  += f.at(i) * pow(theta.at(degree(t,i)) , alpha);
-              norm_derivative += pow(theta.at(degree(t,i)) , alpha) * log10(theta.at(degree(t,i))) * f.at(i); 
-              norm_second_derivative +=  pow(theta.at(degree(t,i)) , alpha) * log10(theta.at(degree(t,i))) * log10(theta.at(degree(t,i))) * 
+              norm_derivative += pow(theta.at(degree(t,i)) , alpha) * log10((double) theta.at(degree(t,i))) * f.at(i); 
+              norm_second_derivative +=  pow(theta.at(degree(t,i)) , alpha) * log10((double) theta.at(degree(t,i))) * log10((double) theta.at(degree(t,i))) * 
                                          f.at(i);  
           }
       double upper = norm_second_derivative * norm - norm_derivative * norm_derivative;   

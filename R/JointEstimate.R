@@ -6,6 +6,8 @@ JointEstimate <- function(raw_net                  ,
                           cv_deg_thresh  = c(1,10) ,
                           normal_start_f = FALSE   ,
                           weight_f       = 1       ,
+                          deg_thresh     = net_stat$deg_thresh,
+                          p              = 0.75               ,
                           ...) {
   
   # first finding the optima r and s by cross validation
@@ -13,7 +15,8 @@ JointEstimate <- function(raw_net                  ,
   
   #cv_deg_thresh <- c(1,5);
   net_type  <-  net_stat$net_type
-  data_cv   <- .CreateDataCV(raw_net, G = net_stat$G, deg_thresh = 0 , net_type = net_type)
+  data_cv   <- .CreateDataCV(raw_net, G = net_stat$G, deg_thresh = deg_thresh,
+                             p = p, net_type = net_type)
   cv_result <- .performCV_old(data_cv, stop_cond = stop.cond, mode_reg_A = mode_reg_A, 
                               print_out = print.out, cv_deg_thresh = cv_deg_thresh, 
                               normal_start_f = normal_start_f, weight_f = weight_f)
@@ -53,15 +56,29 @@ JointEstimate <- function(raw_net                  ,
   # feed the estimated attachment function and node fitnesses for a warm-start rerun with nonparametric attachment function
   #print("Reached final here")
   result  <- PAFit(net_stat,
-                   r           = cv_result$r_optimal,
+                   r            = cv_result$r_optimal,
                    #lambda      = lambda_optimal     ,
                    #auto_lambda = FALSE              ,
-                   s           = cv_result$s_optimal,
-                   start_f     = result_temp$f[as.character(net_stat$f_position)],
-                   alpha_start = result_temp$alpha  ,
-                   stop_cond   = stop.cond          ,
-                   mode_reg_A  = mode_reg_A         ,
+                   s            = cv_result$s_optimal,
+                   start_f      = result_temp$f[as.character(net_stat$f_position)],
+                   alpha_start  = result_temp$alpha  ,
+                   stop_cond    = stop.cond          ,
+                   weight_power = weight_f           ,
+                   mode_reg_A   = mode_reg_A         ,
                    ...)
+  result_pow_0 <-   result  <- PAFit(net_stat,
+                                        r            = cv_result$r_optimal,
+                                        #lambda      = lambda_optimal     ,
+                                        #auto_lambda = FALSE              ,
+                                        s            = cv_result$s_optimal,
+                                        start_f      = result_temp$f[as.character(net_stat$f_position)],
+                                        alpha_start  = result_temp$alpha  ,
+                                        stop_cond    = stop.cond          ,
+                                        weight_power = 0                  ,
+                                        mode_reg_A   = mode_reg_A         ,
+                                        ...) 
   
-  return(list(cv_data = data_cv, cv_result = cv_result, estimate_result = result))
+  return(list(cv_data = data_cv, cv_result = cv_result, 
+              estimate_result = result,
+              estimate_result_pow0 = result_pow_0))
 }
