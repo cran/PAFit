@@ -1,11 +1,11 @@
-.performCV_core <- function(cv_data                                                 ,
-                            r              = 10^c(-6 , -5 , -4 , -3 , -2 )          ,
-                            s              = 10^c(-2 , -1 ,  0 ,  1 ,  2 ,  3 ,  4) , 
-                            stop_cond      = 10^-6                                  ,
-                            print_out      = FALSE                                  ,
-                            cv_deg_thresh  = c(1,5)                                 ,
-                            normal_start_f = normal_start_f                         ,
-                            weight_f       = weight_f                               ,
+.performCV_core <- function(cv_data                                                  ,
+                            r              = c(0, 10^c(-6 , -5 , -4 , -3 , -2, - 1)) ,
+                            s              = 10^c(-2 , -1 ,  0 ,  1 ,  2 ,  3 ,  4)  , 
+                            stop_cond      = 10^-6                                   ,
+                            print_out      = FALSE                                   ,
+                            cv_deg_thresh  = c(1,5)                                  ,
+                            normal_start_f = TRUE                                    ,
+                            weight_f       = 0                                       ,
                            ...) { 
   
   FitMultinomial         <- function(true,dat){
@@ -234,11 +234,13 @@
   ### One pass to find optimal r #######
   chosen_node            <- names(cv_data$stats$z_j[cv_data$stats$z_j >= cv_deg_thresh[1]])
   
-  ratio_vec_PAFit        <- r
+  ratio_vec_PAFit        <- sort(r,decreasing = TRUE)
   PA_each                <- rep(0,length(ratio_vec_PAFit))
   names(PA_each)         <- ratio_vec_PAFit
   max_val                <- -Inf 
   estimated_PA           <- NULL
+  
+  switch_flag            <- 0
   
   for (i in 1:length(ratio_vec_PAFit)) {
     count <- count + 1
@@ -277,7 +279,7 @@
         PA              <- result_PAFit$A[cv_data$deg_each[k,chosen_node]]
         PA[is.na(PA)]   <- cv_data$deg_each[k,chosen_node][is.na(PA)]^alpha_temp
         #print(PA)
-        PA[PA == 0]     <- 1
+        PA[PA == 0]     <- mean(result_PAFit$A)
         fitness         <- rep(1,dim(cv_data$deg_each[,chosen_node])[2])
         names(fitness)  <- colnames(cv_data$deg_each[,chosen_node])
         fitness[chosen_node] <- result_PAFit$f[chosen_node] 
@@ -289,12 +291,19 @@
           FitMultinomial(true = as.vector(prob_PAFit), dat = as.vector(cv_data$prob_em_each[k,chosen_node] * 
                                                                          cv_data$m_each[k])) 
       }
-    if (PA_each[i] > max_val) {
-      lambda_optimal    <- result_PAFit$lambda  
-      r_optimal         <- ratio_vec_PAFit[i]
-      max_val           <- PA_each[i]
-      estimated_PA      <- result_PAFit$theta
-    }    
+    if (i == 1) {  
+        lambda_optimal    <- result_PAFit$lambda  
+        r_optimal         <- ratio_vec_PAFit[i]
+        max_val           <- PA_each[i]
+        estimated_PA      <- result_PAFit$theta
+    } else if (PA_each[i] < PA_each[i - 1]) {
+        break  
+    } else {
+        lambda_optimal    <- result_PAFit$lambda  
+        r_optimal         <- ratio_vec_PAFit[i]
+        max_val           <- PA_each[i]
+        estimated_PA      <- result_PAFit$theta  
+    }
   }
   
   

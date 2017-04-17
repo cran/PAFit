@@ -1,12 +1,11 @@
 Package: PAFit
 Type: Package
-Title: Modelling and Inferencing Attachment Mechanisms of Temporal
-        Complex Networks
-Version: 0.9.8.3
-Date: 2017-03-09
+Title: Generative Mechanism Estimation in Temporal Complex Networks
+Version: 0.9.8.8
+Date: 2017-04-16
 Author: Thong Pham, Paul Sheridan, Hidetoshi Shimodaira
 Maintainer: Thong Pham <thongpham@thongpham.net>
-Description: A framework for modelling and inferencing attachment mechanisms of temporal complex networks is implemented in this package. For estimating the preferential attachment (PA) function in isolation, we implement Jeong's method, the corrected Newman's method and the PAFit method. For jointly estimating the PA function and node fitnesses, we implement the PAFit method. The package also provides flexible methods to generate a wide range of temporal networks based on PA and fitness.  
+Description: Statistical methods for estimating preferential attachment and node fitness generative mechanisms in temporal complex networks are provided.  
 URL: https://github.com/thongphamthe/PAFit
 BugReports: https://github.com/thongphamthe/PAFit/issues
 License: GPL-3
@@ -19,6 +18,6 @@ Encoding: UTF-8
 NeedsCompilation: yes
 Suggests: R.rsp
 VignetteBuilder: R.rsp
-Packaged: 2017-03-12 10:59:20 UTC; thethong
+Packaged: 2017-04-17 05:57:10 UTC; thethong
 Repository: CRAN
-Date/Publication: 2017-03-13 11:46:50
+Date/Publication: 2017-04-17 23:01:03 UTC
