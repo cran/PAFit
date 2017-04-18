@@ -1,4 +1,4 @@
-2c689cf083f8c152a3c95ebd9dd13a03 *DESCRIPTION
+eea424998dc48749350eabd0f5a7c173 *DESCRIPTION
 c885ddc09fd70f2807836fb6d94ef53e *NAMESPACE
 4c27ef01eab0bb078b33380f97ea8f14 *R/CreateDataCV.R
 74e68ec2c9d4c36b056b46373752f2ac *R/CreateDataCV_new.R
@@ -19,7 +19,7 @@ b218738b9991c1a700c2dcc64b426653 *R/joint_estimate.R
 056d84b6ed7026c1432075188bc58cb4 *R/only_A_estimate.R
 31385c0778e3651efa8ef70809e2ed6f *R/only_F_estimate.R
 6be475f1b6b4e64c2e462cd76d1c68ac *R/performCV_old.R
-fb981b2ef7d82948d652a99e1d98833e *R/perform_CV_core.R
+38ff89dae7bfc391ca9dceea96f39aa7 *R/perform_CV_core.R
 a27508b1037cd572a45c96809511c20a *R/plot.Full_PAFit_result.R
 f97f3ae19ca40e0c79a568a2592673b9 *R/plot.pa_result.R
 8982421d09c3c41c034d34211354021e *R/plot.pafit_result.r
@@ -38,13 +38,13 @@ eb9280893882da42a0d289d2a3689bc2 *R/summary.pafit_result.r
 a812e1d668f023cd51212e7580853a89 *build/vignette.rds
 1cfd840546a68c3ea5ee9ae5f51715a2 *data/ComplexNetCoauthor.rda
 f1ec88879161ccea13705138b2e27ee8 *inst/CITATION
-86b49306aabc007d2df58f5749a92de8 *inst/NEWS.Rd
-0774f44240aac3e190d77ced648feedb *inst/doc/Tutorial.pdf
+70256782ef2909ace8c9127be4309f6b *inst/NEWS.Rd
+60e3a843bde779f369903fedb616ffa9 *inst/doc/Tutorial.pdf
 3bede5904032b1bf8b906458289e7be8 *inst/doc/Tutorial.pdf.asis
 0085717b3a2d15dfb3bc1f05cf794a29 *man/ComplexNetCoauthor.rd
 b6a3454f62ede491feb1f72dd0192bea *man/Jeong.rd
 c617f03120dc99708c7ac1616f65cb59 *man/Newman.rd
-276e4eaa0e5fe60bc1b7eff40d029759 *man/PAFit-package.Rd
+5eca87f2164799d29f13023d40b01e72 *man/PAFit-package.Rd
 aaa7a6c8f073fe4d62ddeff87455a939 *man/generate_BA.rd
 f4539cf89824e4bcfa52c0847aad98e0 *man/generate_BB.rd
 0b64789871aadca8d43e99a4db90fc73 *man/generate_ER.rd
