@@ -1,6 +1,5 @@
 # function to generate generalized BA network 
-generate_BA <-
-  function(N, 
+generate_BA <- function(N, 
            num_seed       = 2      , 
            multiple_node  = 1      , 
            m              = 1      ,
