@@ -1,8 +1,8 @@
 Package: PAFit
 Type: Package
 Title: Generative Mechanism Estimation in Temporal Complex Networks
-Version: 1.0.0.0
-Date: 2017-06-12
+Version: 1.0.0.1
+Date: 2017-07-01
 Author: Thong Pham, Paul Sheridan, Hidetoshi Shimodaira
 Maintainer: Thong Pham <thongpham@thongpham.net>
 Description: Statistical methods for estimating preferential attachment and node fitness generative mechanisms in temporal complex networks are provided.  
@@ -18,6 +18,6 @@ Encoding: UTF-8
 NeedsCompilation: yes
 Suggests: R.rsp
 VignetteBuilder: R.rsp
-Packaged: 2017-06-13 01:51:14 UTC; thongpham
+Packaged: 2017-06-30 05:27:43 UTC; thongpham
 Repository: CRAN
-Date/Publication: 2017-06-14 23:28:58 UTC
+Date/Publication: 2017-06-30 17:29:50 UTC

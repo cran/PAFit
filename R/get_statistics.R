@@ -8,7 +8,7 @@ function(net_object ,
          custom_time   = NULL){
     #net               <- as.matrix(net)
     if (class(net_object) != "PAFit_net")
-        stop("Error: net_objec should be a PAFit_net object.")
+        stop("Error: net_object should be a PAFit_net object.")
     net               <- net_object$graph
     net_type          <- net_object$type
     net               <- net[order(net[,3], decreasing = FALSE),]
