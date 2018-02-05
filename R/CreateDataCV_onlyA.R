@@ -1,7 +1,7 @@
 
 .CreateDataCV_onlyA <- function(net_object , p = 0.75 , g = 50 , deg_thresh = 0    ) {
   #net               <- as.matrix(net)
-  
+  options(scipen=999)
   net               <- net_object$graph
   net_type          <- net_object$type
   net               <- net[order(net[,3] , decreasing = FALSE),]
@@ -9,19 +9,23 @@
   in_node           <- as.vector(net[,2])
   
   out_node          <- as.vector(net[,1])
-  node_id           <- as.integer(sort(union(in_node,out_node)))
+  node_id           <- as.numeric(sort(union(in_node,out_node)))
   
-  names(node_id)    <- as.integer(node_id)
+  names(node_id)    <- as.numeric(node_id)
   unique_time       <- sort(unique(time_stamp))
   
   T                 <- length(unique_time)
   
   N                 <- length(node_id) 
     
-  first_time        <- time_stamp[1]
+  first_time        <- unique_time[1]
   edge_cumsum       <- cumsum(as.vector(table(time_stamp[time_stamp != first_time]))) 
   edge_ratio        <- edge_cumsum/edge_cumsum[length(edge_cumsum)]
-  use_time          <- unique_time[which(edge_ratio >= p)[1]]
+  ok_time           <- which(edge_ratio >= p)
+  if (length(ok_time) == 1) {
+      use_time      <- unique_time[length(unique_time) - 1]
+  } else
+      use_time      <- unique_time[which(edge_ratio >= p)[1] + 1]
   
   data_new          <- net[time_stamp <= use_time, ]
   net_new           <- as.PAFit_net(graph = data_new, type = net_type)
