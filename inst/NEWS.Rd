@@ -2,6 +2,20 @@
 \alias{NEWS}
 \title{Package News}
 
+\section{version 1.0.0.4 (Release date: 2018-04-25)}{
+  \subsection{NEW}{
+    \itemize{
+    \item new function \code{test_linear_PA} to chech whether the linear PA-only case is consistent with the observed degree distribution.
+    }
+  }
+    \subsection{CHANGED}{
+    \itemize{
+    \item updated the tutorial
+    \item updated the help manual
+    }
+  }
+}
+
 \section{version 1.0.0.3 (Release date: 2018-02-05)}{
   \subsection{FIXED}{
     \itemize{
