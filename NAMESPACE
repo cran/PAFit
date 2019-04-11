@@ -19,7 +19,7 @@ importFrom("grDevices", "hcl")
 importFrom("RColorBrewer","brewer.pal")
 importFrom("graphics", "abline", "arrows", "lines", "points", "text")
 importFrom("stats", "lm", "rgamma", "rpois", "uniroot","rlnorm","confint","df.residual",
-           "density")
+           "density","dnorm")
 importFrom("graphics", "legend", "mtext","axis")
 importFrom("utils","head", "write.table", "read.table")
 importFrom("stats", "median", "quantile", "smooth.spline","optim")
