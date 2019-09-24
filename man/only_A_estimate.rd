@@ -33,7 +33,7 @@ only_A_estimate(net_object                             ,
 \item \code{1}: Unlike the default, this regularization term exactly enforces the functional form \eqn{A_k = k^\alpha}. Please refer to Eq. (6) in the tutorial for the definition of the term. Its main drawback is it is significantly slower to converge, while its gain over the default one is marginal in most cases.  
 }
 }
-\item{MLE}{Logical. If \code{TRUE}, then not perform cross-validation and estimate the PA function with \code{r = 0}, i.e. maximum likelihood estimation. Default is \code{FALSE}.}
+\item{MLE}{Logical. If \code{TRUE}, then not perform cross-validation and estimate the PA function with \code{r = 0}, i.e., maximum likelihood estimation. Default is \code{FALSE}. One might want to set this option to \code{TRUE} when one believes that there are sufficient data to get a reasonable MLE result, or when one wants to compare the default, regularized result with the MLE result.}
 \item{...}{Other parameters to pass to the internal estimation algorithm.}
 
 }
@@ -72,7 +72,7 @@ only_A_estimate(net_object                             ,
 \references{
   1. Pham, T., Sheridan, P. & Shimodaira, H. (2015). PAFit: A Statistical Method for Measuring Preferential Attachment in Temporal Complex Networks. PLoS ONE 10(9): e0137796. doi:10.1371/journal.pone.0137796 (\url{http://dx.doi.org/10.1371/journal.pone.0137796}).
   
-  2. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Joint Estimation of Preferential Attachment and Node Fitness in Growing Complex Networks. Scientific Reports 6, Article number: 32558. doi:10.1038/srep32558   (\url{www.nature.com/articles/srep32558}).
+  2. Pham, T., Sheridan, P. & Shimodaira, H. (2016). Joint Estimation of Preferential Attachment and Node Fitness in Growing Complex Networks. Scientific Reports 6, Article number: 32558. doi:10.1038/srep32558   (\url{http://www.nature.com/articles/srep32558}).
 }
 \seealso{
   See \code{\link{get_statistics}} for how to create summerized statistics needed in this function.
