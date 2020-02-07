@@ -32,7 +32,9 @@ joint_estimate(net_object                               ,
 \item \code{1}: Unlike the default, this regularization term exactly enforces the functional form \eqn{A_k = k^\alpha}. Please refer to Eq. (6) in the tutorial for the definition of the term. Its main drawback is it is significantly slower to converge, while its gain over the default one is marginal in most cases.  
 }
 }
-\item{...}{Other parameters to pass to the internal estimation algorithm.}
+  \item{\dots}{
+    %%     ~~Describe \code{\dots} here~~
+  }
 }
 
 \value{
