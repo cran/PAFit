@@ -1,4 +1,4 @@
-bff4bfc20325a87fefbb28b59cb0c3a8 *DESCRIPTION
+1ae3fa83e538b3ad58837374809fcdc9 *DESCRIPTION
 eaf5d86b5e94a356e5ff5188e13cad64 *NAMESPACE
 e7da67ee3497a263b9f1638b8e5a7647 *R/CreateDataCV.R
 4b79f9bbd2aba4220eea4491f4406cd0 *R/CreateDataCV_onlyA.R
@@ -51,14 +51,14 @@ c5bf4b97c61fe4ded5c1e733c325b974 *R/to_igraph.R
 5ce182b8ab12163835b5c70de44998c2 *R/to_networkDynamic.R
 95019dcd4ff55e1741e9fcb00bc76ed5 *build/vignette.rds
 1cfd840546a68c3ea5ee9ae5f51715a2 *data/ComplexNetCoauthor.rda
-951a9f308b56aba92df6d02d2d4b54b4 *inst/CITATION
+e922491c50d127fad72dccd637789686 *inst/CITATION
 a5b032d47390d3fdb2770ffbbbd92a3d *inst/NEWS.Rd
 ca2a1d5fb003341ffdb172e46a505899 *inst/doc/Tutorial.pdf
 7a569fff9d7c51a16e572596bee72cd1 *inst/doc/Tutorial.pdf.asis
 621b0c6c730a971cfc4b07a245152faf *man/ComplexNetCoauthor.rd
 b3d67f639064bc7f5ae0510cb4264505 *man/Jeong.rd
 6209dc37ec7110c176143d67b8379972 *man/Newman.rd
-328e848205aacd1f6d0483d4f40b200a *man/PAFit-package.Rd
+f5054c8c0b1a5bd09d45f472526d1996 *man/PAFit-package.Rd
 f5c282c958442095db0e11d14d86a7bb *man/as.PAFit_net.rd
 8fe2868a5bebbcafc9a714152855a665 *man/from_igraph.rd
 7ac89442f7788dc3a7c370cbc0c28ff2 *man/from_networkDynamic.rd
@@ -70,7 +70,7 @@ d0fc3ee8c8a4fbad9bf2ac2383e714c9 *man/generate_ER.rd
 3cb699b2d82ba796dafa839b5549dccc *man/get_statistics.Rd
 92960afef802d8cad1037d03406bcdec *man/graph_from_file.rd
 74e56c86311511ce499581bf2fb8ea8c *man/graph_to_file.rd
-9a160cda2f04d998ddf8abb730788c92 *man/joint_estimate.rd
+90041b2294a6fad87d4d835106ff6990 *man/joint_estimate.rd
 051443aab01e35e8e54215c7741d1b95 *man/only_A_estimate.rd
 313506d449fae9aaa148b01bad45c613 *man/only_F_estimate.rd
 416a8dd625692dc922845f14c6bc3f0b *man/plot.Full_PAFit_result.Rd
