@@ -1,6 +1,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <stdlib.h> // for NULL
+#include <math.h>
 #include <R_ext/Rdynload.h>
 
 

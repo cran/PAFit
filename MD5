@@ -1,4 +1,4 @@
-8687bec6f07cab0f66af2c423b8d5042 *DESCRIPTION
+4b7c47acab64f92b6f10e9bc6203c39f *DESCRIPTION
 40c12f5f7a1a789b34893c580d1399b3 *NAMESPACE
 f468be46419dc10ef7f4774d27e6dc02 *R/CreateDataCV.R
 4b79f9bbd2aba4220eea4491f4406cd0 *R/CreateDataCV_onlyA.R
@@ -8,7 +8,7 @@ ad2bd21ad6cbfbb03e4df2c78aa7f4c6 *R/OnlyA_CV.R
 ef1e52fd36b12c121294bc9df119e863 *R/OnlyF_CV.R
 f60923ded559f78a66f777de590edace *R/PAFit.R
 fe90095a79c7188fdd6c4f8cba90d26f *R/PAFit_oneshot.R
-e4b97558da419bf7f3be4feb0259b669 *R/RcppExports.R
+36b4d8731de1e6cf18df5f07abb1ac8b *R/RcppExports.R
 0dc5351e8759ced7909a3b69e150adaf *R/as.PAFit_net.R
 2a0983a4a5b1d25c1763ed8ebf8c1ae7 *R/binning.R
 b2f4fd2e8af12bcfa56b264a7537f245 *R/estimate_multiple_phase_correct_mcPAMLE.R
@@ -24,7 +24,7 @@ ac746037c58468ba058565e20c12beb0 *R/generate_ER.R
 d92f6b48f72050882e853232a9d4b28c *R/get_statistics.R
 c2582d997082dc03a5b783a1e9125b40 *R/graph_from_file.R
 dae4be26afcbc548e3de2345295eea43 *R/graph_to_file.R
-4bca9f1d216adbeca40c06fdd04f5a47 *R/joint_estimate.R
+df5663987aeb2cf50e18bff314ba29cb *R/joint_estimate.R
 098a90b36a8749088b7a1fc59c4b8e20 *R/one_cycle.R
 aa8e74749891f14e752d9384ca224741 *R/only_A_estimate.R
 2131cb0b905845882eb3dc9e6c1e0deb *R/only_F_estimate.R
@@ -55,8 +55,8 @@ c6e50a4091f27abebc3c6d043b0359b8 *R/summary.pafit_result.r
 623aee4c97e4e89ac7b95488b48ec667 *R/test_linear_PA.R
 c5bf4b97c61fe4ded5c1e733c325b974 *R/to_igraph.R
 6b6963ac1d8c32a78cca03594b33925b *R/to_networkDynamic.R
-5d3ebb029bb3daa40ee5a380b53a1cdd *build/partial.rdb
-a7ce7ea2393139871806a2fe7a933d94 *build/vignette.rds
+0488086b13f738c1d3c0279582460c73 *build/partial.rdb
+f324a427e3a834d87ff23b7b28f7739f *build/vignette.rds
 1cfd840546a68c3ea5ee9ae5f51715a2 *data/ComplexNetCoauthor.rda
 cde4acd178bce158ed3c6ef710388e26 *inst/CITATION
 259ffdfc948b6a97bc6d18d0ad4b4fab *inst/NEWS.Rd
@@ -65,7 +65,7 @@ ca2a1d5fb003341ffdb172e46a505899 *inst/doc/Tutorial.pdf
 4df5ba180ef5f24229de7e79d67e6ff0 *man/ComplexNetCoauthor.rd
 b78ce2d0bc9c293e367a325e71bb2861 *man/Jeong.rd
 ebfeb5f28a16d10069852a84ad82339a *man/Newman.rd
-35b2bdcc8816570a3c9bb9128af70a90 *man/PAFit-package.Rd
+3f1087f562e326b750542c829e66daa3 *man/PAFit-package.Rd
 189e22ad783b6ed1593e89d82dde2e27 *man/PAFit_oneshot.rd
 85d0a1542d67b82c69fdeb6652a9f4e9 *man/as.PAFit_net.rd
 899ec855fa150c2ceac1fbeef40d0427 *man/from_igraph.rd
@@ -78,7 +78,7 @@ ea4887188f6555bd792e581289528311 *man/generate_net.Rd
 6bdef91f6212ee7fba446450d5328ddd *man/get_statistics.Rd
 f7688eafc1b0a1af58481f0c068eec6a *man/graph_from_file.rd
 52cf2d3c3413fec23f430eed46ee4774 *man/graph_to_file.rd
-4bf2a61ffed580d2cfba847ea74f978f *man/joint_estimate.rd
+f28c982f6c4ac5eca5190af19f31a695 *man/joint_estimate.rd
 89811aef9d08466ddfaad94d5e3b33ee *man/only_A_estimate.rd
 53bc28309a0d0dd622aef1503818bd9b *man/only_F_estimate.rd
 908e9657dbac70697667e28227e893af *man/plot.Full_PAFit_result.Rd
@@ -99,7 +99,7 @@ ed570c6d1d8c9d95efa40ef2d785e53a *man/summary.PAFit_data.rd
 624eb92bfd3b0a4ef1b9007bf261e504 *man/summary.PAFit_net.rd
 0560ccd139e5fb5a73174d1a4e8bf2d1 *man/summary.PAFit_result.rd
 b277a0745507514a23a6699793d1cb21 *man/summary.PA_result.rd
-fd3222a757b75e106d504d62acf70ac0 *man/test_linear_PA.rd
+bf7966e6c0c588075d54878855b03235 *man/test_linear_PA.rd
 84b8ee85189d8d3795c715671d2b16cc *man/to_igraph.rd
 265226b7f600b5b6ac27734ac04469dc *man/to_networkDynamic.rd
 92735088279f65d95de9b184ef341a49 *src/Cpp_code.cpp
@@ -107,7 +107,7 @@ fd3222a757b75e106d504d62acf70ac0 *man/test_linear_PA.rd
 15a3ae6f2d1a2487aff25d3220231ffc *src/Makevars.win
 18e6405a10680382592d202c42a283b1 *src/PAFit_header.h
 a7c6cfe97b4a1599d5b18d076405b294 *src/RcppExports.cpp
-add8ec69f148b6593aa5dede1b5807ca *src/init.c
+2cd78316a5d817c4eb82c84b61504f82 *src/init.c
 f9c86ace09156b71d536fc224771c5ae *tests/fit_node_no_new_edge.R
 f52989cf1943db4b9f9207da3fb5762e *tests/loop_generate.R
 8eb558d77a92725fa2c11189aca34953 *tests/loop_joint_estimate.R
@@ -117,15 +117,15 @@ d8f11b7e9734d6450c8b6f608fe97ab6 *tests/loop_test_Newman_Kong.R
 f991267892559544a3fa67ca9c778605 *tests/test_GetStatistics_compress_2.R
 8a2331b79b5493128653bffc1a82167c *tests/test_GetStatistics_undirected.R
 8ca3f2251b112a9f4ddaf547f616fc93 *tests/test_Newman_Kong.R
-ce126d4f2c1dfd55edd69903e264bc5e *tests/test_PAFit_oneshot.R
+93ec85b8145c2ef83c08bf9c3ce017a7 *tests/test_PAFit_oneshot.R
 0df88be88e1e4b413643c41ee87606fe *tests/test_cv_data.R
 6ce73f15c047baee45c04c8963065483 *tests/test_from_igraph.R
 0f08ca33a91b95f1a440a6f7d9d5afd8 *tests/test_from_networkDynamic.R
 63a3f8c17406ca3467d1b9e2dfb61640 *tests/test_generate_net_no_new_node.R
 c89d822bbd817c2dd8f3afc9d6e28b43 *tests/test_graph_from_file.R
 ce0626c5241f9d22386daea79e1e7093 *tests/test_graph_to_file.R
-5609e1ac718d5302e6f37166f29c3af8 *tests/test_isolated_node_2.R
-258a72448fb3c70d52ccdf6680a59a37 *tests/test_joint_estimate.R
+611574fda62ea30c4da4f97c0764dcd9 *tests/test_isolated_node_2.R
+1e0388389a6083749055b60ce02856b1 *tests/test_joint_estimate.R
 0bfe4c6631a0f95c235f3a84148150c2 *tests/test_only_A.R
 46d400d6842ace852a1a36641b229437 *tests/test_only_F.R
 14cdd555549ec3a2fba09cab38cbd5ef *tests/test_overall.R
